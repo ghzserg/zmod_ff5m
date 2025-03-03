@@ -5750,7 +5750,7 @@ eae5eeea9af84670db8407b4796d2f0f  ./opt/tslib-1.12/bin/ts_print_mt
 dd989b6b3307e49bf4ee800b9f9eaccc  ./opt/mencoder
 7df26c55291b33344dc15e3935dabaf3  ./opt/AD4/openssl-1.0.2d/openssl.cnf
 8b5c229c2c201793ae38a6752cb5103c  ./opt/lib/libc-2.27.so
-621bd700999e90613696b618a88d8160  ./opt/lib/opkg/status
+776a8a29c962a1624ac361635cae50da  ./opt/lib/opkg/status
 5c50c1d0cc47f2f8b4ac39720497e023  ./opt/lib/opkg/info/libe2p.control
 9c5f94242a93ca8b46e7d8e2c0e241f2  ./opt/lib/opkg/info/libffi.list
 d589f08927b9ace50df3347e1b08d84a  ./opt/lib/opkg/info/libpcre2.control
@@ -5781,6 +5781,7 @@ fe695fde0a406a29c0edf5becc8aecde  ./opt/lib/opkg/info/entware-opt.conffiles
 b0db1e4f73c750f9e86c7fdaf9a2d038  ./opt/lib/opkg/info/libgcc.list
 dc1ee575eb6159d6d963281fcbe09334  ./opt/lib/opkg/info/libpcre2.list
 cc56e41143f801175951522754578a64  ./opt/lib/opkg/info/gdb.control
+b1668ac5b9c24f649f06deea298171db  ./opt/lib/opkg/info/htop.prerm
 c5e2af4a19c70562997d5246e9524e9d  ./opt/lib/opkg/info/entware-upgrade.postinst
 aa8b30549fc2872ce2c959a105ccdd6a  ./opt/lib/opkg/info/opkg.list
 ee47dda742617b9bb83686a3d50ba6d8  ./opt/lib/opkg/info/libncurses.list
@@ -5796,12 +5797,14 @@ ee9527486db70da17be8c8fc83c87d98  ./opt/lib/opkg/info/libstdcpp.list
 badced6dafe8c2940d2844918c56712d  ./opt/lib/opkg/info/zoneinfo-core.list
 afcd3fedce2e4561ca71dfef771d8df4  ./opt/lib/opkg/info/findutils.list
 d94d70431edb5bda2f4e8a38a5986262  ./opt/lib/opkg/info/mc.list
+c242e08741c1fdf1e3509a6a5dbf9bec  ./opt/lib/opkg/info/htop.postinst
 15eda78540ccc0a2a1414987cb5b46fc  ./opt/lib/opkg/info/libattr.list
 701e69d4a014957b6dbbd0f1be199f82  ./opt/lib/opkg/info/terminfo.list
 e3477c7a1b0de44ff73059a75d2af814  ./opt/lib/opkg/info/libssh2.list
 cd6e736b5d18a7109be43ce373916739  ./opt/lib/opkg/info/libssp.list
 81b188670832e3ee8bdaab86d6ad5675  ./opt/lib/opkg/info/zoneinfo-asia.control
 fe913e7610dd3f8b69b9c5466f176224  ./opt/lib/opkg/info/zoneinfo-core.control
+ef31b131cd4a6c73ca80c9cd95c50e0e  ./opt/lib/opkg/info/htop.list
 2ebf9066e8c95623b7707423cdd96e23  ./opt/lib/opkg/info/opkg.control
 bb335cc7e6aa5581577ad4f3b2de282c  ./opt/lib/opkg/info/findutils.control
 fd97ee4a281c32ff98a6b98a37a1c4aa  ./opt/lib/opkg/info/libuuid.control
@@ -5813,6 +5816,7 @@ d2260424eef4488704f6354299756662  ./opt/lib/opkg/info/locales.list
 4c0ccd76f1d5bd991df71c1a93799d34  ./opt/lib/opkg/info/libgmp.list
 68653b823503dcc188d076c1f68475f5  ./opt/lib/opkg/info/libgcc.control
 35960f9bce06cb8105bc36d59089ae01  ./opt/lib/opkg/info/libmount.control
+5d09bbe09b7d168a77915ac2439a8f76  ./opt/lib/opkg/info/htop.control
 8196dd07e9810dff4385a95ec523d1c4  ./opt/lib/opkg/info/libthread-db.list
 7ffb9c4fbada7802c91aa401594ead31  ./opt/lib/opkg/info/libblkid.control
 ed1a36c2da1c1a10014e7efd733ede95  ./opt/lib/opkg/info/entware-opt.postinst
@@ -8191,7 +8195,7 @@ e764a3330e77d3fd409562213a62a460  ./opt/share/zoneinfo/CST6CDT
 229d70912ecce1494a2ea46216e1ae28  ./opt/share/zoneinfo/GMT-4
 94e1106ca7397376fa6b1b61054ec98c  ./opt/root/.profile
 5249754f0a5ca21f32bc66b602d03b99  ./opt/root/.inputrc
-b84b41c9d8e0f9411a9ab1414a15001f  ./opt/var/opkg-lists/entware
+194cb17e1300d5d511b8a75c00b94f12  ./opt/var/opkg-lists/entware
 1d661b023f64f676545da38b75bfd85b  ./opt/Python-3.7.11/include/python3.7m/ast.h
 dded66108ee3ce88d2f4d21816f13012  ./opt/Python-3.7.11/include/python3.7m/bltinmodule.h
 824bd9105fc8544effd4a24371c35423  ./opt/Python-3.7.11/include/python3.7m/pyexpat.h
@@ -13201,6 +13205,7 @@ cda3f2f8fcd83189679ebc7b6de7bd4f  ./opt/bin/opkg
 e8bf7a6d541c189a5ee4c55a194ee01e  ./opt/bin/gdb
 b5c7288375f84000529acfa6a5cc4dcd  ./opt/bin/locale.new
 1b3eac7c0edef4456285b398dbc0420a  ./opt/bin/localedef.new
+8556e3015d79daa3e727d6f240c971af  ./opt/bin/htop
 a8b903a12876d285be902a6c2d0867ab  ./opt/bin/mc
 c088112cb8cac10c8f41fbe5c6a8121a  ./opt/mjpg-streamer/lib/output_http.so
 ae86db125c30555940c7514c87a23437  ./opt/mjpg-streamer/lib/output_rtsp.so
