@@ -12,7 +12,7 @@ prepare_chroot()
 
     [ -L /root/printer_data/scripts ] || ln -s /opt/config/mod/.shell /root/printer_data/scripts
 
-    #[ -L /root/klipper-env/lib/python3.11/site-packages/numpy ] || ln -s /usr/lib/python3.11/site-packages/numpy /root/klipper-env/lib/python3.11/site-packages/
+    #[ -L /root/klipper-env/lib/python3.12/site-packages/numpy ] || ln -s /usr/lib/python3.12/site-packages/numpy /root/klipper-env/lib/python3.12/site-packages/
 
     [ -d /etc/init.d/ ] || mkdir -p /etc/init.d/
 
@@ -26,8 +26,8 @@ prepare_chroot()
     [ -L /etc/init.d/S65moonraker ] || ln -s /opt/config/mod/.shell/root/S65moonraker /etc/init.d/
     [ -L /etc/init.d/S70httpd ] || ln -s /opt/config/mod/.shell/root/S70httpd /etc/init.d/
 
-    [ -L /usr/lib/python3.11/site-packages/mido ] || ln -s /opt/config/mod/.shell/root/mido/ /usr/lib/python3.11/site-packages/
-    [ -L /usr/lib/python3.11/site-packages/mido-1.3.3.dist-info ] || ln -s /opt/config/mod/.shell/root/mido-1.3.3.dist-info/ /usr/lib/python3.11/site-packages/
+    [ -L /usr/lib/python3.12/site-packages/mido ] || ln -s /opt/config/mod/.shell/root/mido/ /usr/lib/python3.12/site-packages/
+    [ -L /usr/lib/python3.12/site-packages/mido-1.3.3.dist-info ] || ln -s /opt/config/mod/.shell/root/mido-1.3.3.dist-info/ /usr/lib/python3.12/site-packages/
 
     [ -L /usr/bin/audio ] || ln -s /opt/config/mod/.shell/root/audio/audio /usr/bin/audio
     [ -L /usr/bin/audio_midi.sh ] || ln -s /opt/config/mod/.shell/root/audio/audio_midi.sh /usr/bin/audio_midi.sh
