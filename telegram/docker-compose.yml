@@ -1,0 +1,40 @@
+version: "3.3"
+# Это пример файла докер композ
+# Его запускать на внешнем хосте для телеграм бота
+#
+# mkdir config log timelapse_finished timelapse
+# chmod 777 config log timelapse_finished timelapse
+#
+# docker-compose up -d или docker compose up -d
+#
+# Файл telegram.conf поместить в папку config
+
+services:
+  moonraker-telegram-bot:
+    image: lefskiy/moonraker-telegram-bot:latest
+    restart: unless-stopped
+    network_mode: host
+    environment:
+#      - TZ=Europe/Kaliningrad
+#      - TZ=Europe/Moscow
+#      - TZ=Europe/Samara
+      - TZ=Asia/Yekaterinburg
+#      - TZ=Asia/Omsk
+#      - TZ=Asia/Krasnoyarsk
+#      - TZ=Asia/Irkutsk
+#      - TZ=Asia/Yakutsk
+#      - TZ=Asia/Vladivostok
+#      - TZ=Asia/Magadan
+#      - TZ=Asia/Kamchatka
+    volumes:
+      - ./timelapse:/home/moonraker-telegram-bot/moonraker-telegram-bot-timelapse
+      - ./timelapse_finished:/home/moonraker-telegram-bot/timelapse_finished
+      - ./log:/opt/printer_data/logs
+      - ./config:/opt/printer_data/config
+
+  cron:
+    image: alpine:latest
+    command: /bin/sh -c "while sleep 600; do find /home/moonraker-telegram-bot/ -type f -mtime +10 -delete; done"
+    volumes:
+      - ./timelapse:/home/moonraker-telegram-bot/moonraker-telegram-bot-timelapse
+      - ./timelapse_finished:/home/moonraker-telegram-bot/timelapse_finished

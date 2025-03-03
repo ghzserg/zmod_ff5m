@@ -1,0 +1,59 @@
+#!/bin/sh
+#
+# Start moonraker
+#
+
+PYTHON=/root/moonraker-env/bin/python3
+MOONRAKER=/root/moonraker-env/moonraker/moonraker.py
+PRINTER_DATA=/root/printer_data
+PRINTER_DATA_TMP=/root/printer_data/tmp
+PID_FILE=/run/moonraker.pid
+
+start() {
+    NEED="N"
+    if [ -f "/opt/config/mod_data/database/moonraker-sql.db" ]
+        then
+            sqlite3 /opt/config/mod_data/database/moonraker-sql.db </opt/config/mod/fluidd.sql
+#            moonraker_uuid=$(sqlite3 /opt/config/mod_data/database/moonraker-sql.db "SELECT VALUE FROM namespace_store WHERE namespace='moonraker' AND key='instance_id';" 2>/dev/null)
+#            if [ "${moonraker_uuid}" != "" ]; then echo -n "${moonraker_uuid}" >/root/printer_data/.moonraker.uuid; fi
+        else
+            NEED="Y"
+    fi
+
+    rm -rf $PRINTER_DATA_TMP && mkdir -p $PRINTER_DATA_TMP # clean temp
+    export TMPDIR=$PRINTER_DATA_TMP # without TMPDIR moonraker writes to /tmp which is a ramdisk
+
+    start-stop-daemon -S -b -m -p $PID_FILE --exec $PYTHON -- $MOONRAKER -d $PRINTER_DATA
+
+    if [ "$NEED" == "Y" ]
+        then
+            sleep 10
+            sqlite3 /opt/config/mod_data/database/moonraker-sql.db </opt/config/mod/fluidd.sql
+    fi
+}
+
+stop() {
+    start-stop-daemon -K -p $PID_FILE
+}
+restart() {
+    stop
+    sleep 2
+    start
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  restart|reload)
+        restart
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit $?

@@ -1,0 +1,43 @@
+#!/bin/sh
+
+start() {
+    printf "Starting dropbear: "
+    dropbear -p 22
+    [ $? = 0 ] && echo "OK" || echo "FAIL"
+}
+
+stop() {
+    printf "Stopping dropbear: "
+    killall dropbear
+    echo "OK"
+}
+
+if ! [ -d /etc/dropbear ]
+    then
+        # Make dropbear config directory
+        mkdir -p /etc/dropbear
+
+        # Pregenerate dropbear SSH keys
+        dropbearkey -t rsa -f /etc/dropbear/dropbear_rsa_host_key
+        dropbearkey -t dss -f /etc/dropbear/dropbear_dss_host_key
+        dropbearkey -t ecdsa -f /etc/dropbear/dropbear_ecdsa_host_key
+        dropbearkey -t ed25519 -f /etc/dropbear/dropbear_ed25519_host_key
+fi
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart|reload)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit $?

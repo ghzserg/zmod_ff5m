@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# Start guppyscreen
+#
+
+GUPPYSCREEN=/root/guppyscreen/guppyscreen
+PID_FILE=/run/guppyscreen.pid
+NICENESS=10
+
+start() {
+    backlight 0
+
+    mv /opt/config/mod_data/log/guppyscreen.4.log /opt/config/mod_data/log/guppyscreen.5.log
+    mv /opt/config/mod_data/log/guppyscreen.3.log /opt/config/mod_data/log/guppyscreen.4.log
+    mv /opt/config/mod_data/log/guppyscreen.2.log /opt/config/mod_data/log/guppyscreen.3.log
+    mv /opt/config/mod_data/log/guppyscreen.1.log /opt/config/mod_data/log/guppyscreen.2.log
+    mv /opt/config/mod_data/log/guppyscreen.log /opt/config/mod_data/log/guppyscreen.1.log
+
+    /etc/init.d/S35tslib start
+    killall guppyscreen
+    backlight 60
+    start-stop-daemon -S -b -m -p $PID_FILE -N $NICENESS --exec /bin/sh -- -c $GUPPYSCREEN
+}
+
+stop() {
+    /etc/init.d/S35tslib stop
+    killall guppyscreen
+}
+
+restart() {
+    stop
+    sleep 2
+    start
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart|reload)
+        restart
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit $?
