@@ -3,6 +3,7 @@
 # Start Camera
 #
 
+MOD=/data/.mod/.zmod
 
 if ! [ -f /opt/config/mod_data/camera.conf ]
     then
@@ -16,12 +17,24 @@ PID_FILE=/run/camera.pid
 start() {
     if [ $START = "on" ]
         then
-            /usr/bin/v4l2-ctl --set-fmt-video=width=${WIDTH},height=${HEIGHT},pixelformat=1
-            if [ -f /THIS_IS_NOT_YOUR_ROOT_FILESYSTEM ]; then
-#                start-stop-daemon -S -b -m -p $PID_FILE --exec /opt/mjpg-streamer/bin/mjpg_streamer -- -o "/opt/mjpg-streamer/lib/output_http.so -w /opt/mjpg-streamer/www -p 8080" -i  "/opt/mjpg-streamer/lib/input_uvc.so -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS"
-                start-stop-daemon -S -b -m -p $PID_FILE --exec /opt/config/mod/.shell/eabi/mjpg_streamer -- -o "/opt/config/mod/.shell/eabi/lib/output_http.so -w /opt/mjpg-streamer/www -p 8080" -i  "/opt/config/mod/.shell/eabi/lib/input_uvc.so -b 1 -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS"
+
+            if v4l2-ctl -d /dev/video0  --list-formats | grep MJPG2; then
+                /usr/bin/v4l2-ctl --set-fmt-video=width=${WIDTH},height=${HEIGHT},pixelformat=1
+                if [ -f /THIS_IS_NOT_YOUR_ROOT_FILESYSTEM ]; then
+                    start-stop-daemon -S -b -m -p $PID_FILE --exec /opt/config/mod/.shell/eabi/mjpg_streamer -- -o "/opt/config/mod/.shell/eabi/lib/output_http.so -w /opt/mjpg-streamer/www -p 8080" -i  "/opt/config/mod/.shell/eabi/lib/input_uvc.so -b 1 -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS"
+                else
+                    start-stop-daemon -S -b -m -p $PID_FILE --exec /usr/bin/mjpg_streamer -- -o "/usr/lib/mjpg-streamer/output_http.so -w /usr/share/mjpg-streamer/www -p 8080" -i  "/usr/lib/mjpg-streamer/input_uvc.so -b 1 -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS"
+                fi
             else
-                start-stop-daemon -S -b -m -p $PID_FILE --exec /usr/bin/mjpg_streamer -- -o "/usr/lib/mjpg-streamer/output_http.so -w /usr/share/mjpg-streamer/www -p 8080" -i  "/usr/lib/mjpg-streamer/input_uvc.so -b 1 -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS"
+                FORMAT=$(v4l2-ctl -d /dev/video0  --list-formats| grep '\[' | tail -1| cut -d "'" -f2)
+                if [ -f /THIS_IS_NOT_YOUR_ROOT_FILESYSTEM ]; then
+                    umount /data/.mod/
+                    chroot $MOD start-stop-daemon -S -b -m -p $PID_FILE --exec /bin/ustreamer -- -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS --format=$FORMAT -s 0.0.0.0
+                    mount --bind /data/lost+found /data/.mod
+                else
+                    start-stop-daemon -S -b -m -p $PID_FILE --exec /bin/ustreamer -- -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS --format=$FORMAT -s 0.0.0.0
+                fi
+                ustreamer --format=MJPEG -s 0.0.0.0 -r 1280x720
             fi
         else
             echo "Камера отключена"
@@ -30,6 +43,7 @@ start() {
 
 stop() {
     start-stop-daemon -K -p $PID_FILE 2>/dev/null >/dev/null
+    killall mjpg_streamer ustreamer
 }
 restart() {
     stop
