@@ -51,6 +51,8 @@ restore_base()
     grep -q receive_time /opt/klipper/klippy/extras/buttons.py && cp /opt/config/mod/.shell/buttons.py.orig /opt/klipper/klippy/extras/buttons.py
     rm -f /opt/klipper/klippy/extras/zmod.py
 
+    rm -f /etc/profile.d/path.sh
+
     F="/opt/klipper/klippy/toolhead.py"
     grep -q "LOOKAHEAD_FLUSH_TIME = 0.5" $F || sed -i 's|^LOOKAHEAD_FLUSH_TIME.*|LOOKAHEAD_FLUSH_TIME = 0.5|' $F
 
@@ -132,6 +134,8 @@ fix_config()
     date
     fstrim /data -v
     fstrim / -v
+
+    [ -f /etc/profile.d/path.sh ] || echo "export PATH=\"$PATH:/opt/bin/:/opt/sbin/\"" >/etc/profile.d/path.sh
 
     [ -f /opt/config/mod_data/variables.cfg ] || echo "[Variables]" >/opt/config/mod_data/variables.cfg
 
