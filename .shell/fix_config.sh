@@ -24,45 +24,6 @@ check_link()
     fi
 }
 
-remove_base()
-{
-    rm -rf /data/.mod
-    rm /etc/init.d/S00fix
-    rm /etc/init.d/S99moon
-    rm /etc/init.d/S98camera
-    rm /etc/init.d/S98zssh
-    rm /etc/init.d/K99moon
-    rm -f /etc/init.d/prepare.sh
-    # REMOVE SCRIPTS
-    rm -rf /root/printer_data/scripts
-    # REMOVE ENTWARE
-    rm -rf /opt/bin
-    rm -rf /opt/etc
-    rm -rf /opt/home
-    rm -rf /opt/lib
-    rm -rf /opt/libexec
-    rm -rf /opt/root
-    rm -rf /opt/sbin
-    rm -rf /opt/share
-    rm -rf /opt/tmp
-    rm -rf /opt/usr
-    rm -rf /opt/var
-    # Remove ROOT
-    rm -rf /etc/init.d/S50sshd /etc/init.d/S55date /bin/dropbearmulti /bin/dropbear /bin/dropbearkey /bin/scp /etc/dropbear /etc/init.d/S60dropbear
-    # Remove BEEP
-    rm -f /usr/bin/audio.py /usr/bin/audio /usr/lib/python3.7/site-packages/audio.py /usr/bin/audio_midi.sh /opt/klipper/klippy/extras/gcode_shell_command.py
-    rm -rf /usr/lib/python3.7/site-packages/mido/
-    sync
-
-    [ -f /opt/config/mod/FULL_REMOVE ] && rm -rf /opt/config/mod_data/
-    sync
-
-    rm -rf /opt/config/mod/
-    sync
-    reboot
-    exit
-}
-
 restore_base()
 {
     grep -q '^\[include mod.user.cfg' /opt/config/printer.cfg && sed -i '/include mod.user.cfg/d' /opt/config/printer.cfg
@@ -163,11 +124,6 @@ event_delay: 1.0
     fi
 
     grep -q '^minimum_cruise_ratio' /opt/config/printer.base.cfg && sed -i 's|^minimum_cruise_ratio.*|max_accel_to_decel:5000|' /opt/config/printer.base.cfg
-
-    if [ -f /opt/config/mod/REMOVE ] || [ -f /opt/config/mod/FULL_REMOVE ]; then
-        remove_base
-    fi
-
 }
 
 fix_config()

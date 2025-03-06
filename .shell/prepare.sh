@@ -4,6 +4,46 @@ set -x
 
 MOD=/data/.mod/.zmod
 
+remove_base()
+{
+    rm -rf /data/.mod
+    rm /etc/init.d/S00fix
+    rm /etc/init.d/S99moon
+    rm /etc/init.d/S98camera
+    rm /etc/init.d/S98zssh
+    rm /etc/init.d/K99moon
+    # REMOVE SCRIPTS
+    rm -rf /root/printer_data/scripts
+    # REMOVE ENTWARE
+    rm -rf /opt/bin
+    rm -rf /opt/etc
+    rm -rf /opt/home
+    rm -rf /opt/lib
+    rm -rf /opt/libexec
+    rm -rf /opt/root
+    rm -rf /opt/sbin
+    rm -rf /opt/share
+    rm -rf /opt/tmp
+    rm -rf /opt/usr
+    rm -rf /opt/var
+    # Remove ROOT
+    rm -rf /etc/init.d/S50sshd /etc/init.d/S55date /bin/dropbearmulti /bin/dropbear /bin/dropbearkey /bin/scp /etc/dropbear /etc/init.d/S60dropbear
+    # Remove BEEP
+    rm -f /usr/bin/audio.py /usr/bin/audio /usr/lib/python3.7/site-packages/audio.py /usr/bin/audio_midi.sh /opt/klipper/klippy/extras/gcode_shell_command.py
+    rm -rf /usr/lib/python3.7/site-packages/mido/
+    sync
+
+    [ -f /opt/config/mod/FULL_REMOVE ] && rm -rf /opt/config/mod_data/
+    sync
+
+    rm -f /etc/init.d/prepare.sh
+    sync
+    rm -rf /opt/config/mod/
+    sync
+    reboot
+    exit
+}
+
 start_moon()
 {
     SWAP="/root/swap"
@@ -97,7 +137,7 @@ if [ -f /opt/config/mod/SKIP_ZMOD ]
 fi
 
 if [ -f /opt/config/mod/REMOVE ] || [ -f /opt/config/mod/FULL_REMOVE ]; then
-  sync
+  remove_base
   exit 0
 fi
 

@@ -3,6 +3,7 @@
 # Start Camera
 #
 
+set -x
 MOD=/data/.mod/.zmod
 
 if ! [ -f /opt/config/mod_data/camera.conf ]
@@ -53,7 +54,7 @@ restart() {
 
 case "$1" in
   start)
-        start
+        start &>/opt/config/mod_data/log/camera.log
         ;;
   stop)
         stop
