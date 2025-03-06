@@ -39,7 +39,6 @@ start() {
                 else
                     start-stop-daemon -S -b -m -p $PID_FILE --exec /bin/ustreamer -- -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS --format=$FORMAT -s 0.0.0.0
                 fi
-                ustreamer --format=MJPEG -s 0.0.0.0 -r 1280x720
             fi
         else
             echo "Камера отключена"
