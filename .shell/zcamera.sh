@@ -3,14 +3,14 @@
 # Camera config
 #
 
-if [ $# -ne 6 ]; then echo "Используйте $0 START WIDTH HEIGHT FPS VIDEO RESTART"; exit 1; fi
+if [ $# -ne 7 ]; then echo "Используйте $0 START WIDTH HEIGHT FPS VIDEO RESTART FS"; exit 1; fi
 
 echo "# Не редактируйте этот файл
 # Используйте макрос
 #
-# CAMERA_ON WIDTH=$2 HEIGHT=$3 FPS=$4 VIDEO=$5
+# CAMERA_ON WIDTH=$2 HEIGHT=$3 FPS=$4 VIDEO=$5 FS=$6
 # или
-# CAMERA_OFF WIDTH=$2 HEIGHT=$3 FPS=$4 VIDEO=$5
+# CAMERA_OFF WIDTH=$2 HEIGHT=$3 FPS=$4 VIDEO=$5 FS=$6
 #
 # Если камера включена, то отключите камеру на экране принтера
 # Если нужно перезапустить камеру, используйте макрос CAMERA_RESTART
@@ -29,6 +29,9 @@ FPS=$4
 
 # Видео устройство: video0
 VIDEO=$5
+
+# Обрезать память на глючных камерах (0-нет, 1-да)
+FS=$6
 " >/opt/config/mod_data/camera.conf
 
-[ $6 = "RESTART" ] && /etc/init.d/S98camera restart
+[ $7 = "RESTART" ] && /etc/init.d/S98camera restart

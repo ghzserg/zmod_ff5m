@@ -8,30 +8,40 @@ MOD=/data/.mod/.zmod
 
 if ! [ -f /opt/config/mod_data/camera.conf ]
     then
-        /root/printer_data/scripts/zcamera.sh off 640 480 20 video0 NOTRESTART
+        /opt/config/mod/.shell/zcamera.sh off 640 480 20 video0 0 NOTRESTART
 fi
 
 VIDEO="video0"
+FS=0
 source /opt/config/mod_data/camera.conf
 PID_FILE=/run/camera.pid
 
 start() {
+    echo "Используйте up вместо start"
+}
+
+up() {
     if [ $START = "on" ] && [ -c /dev/$VIDEO ]
         then
             v4l2-ctl -d /dev/$VIDEO --list-formats
             if v4l2-ctl -d /dev/$VIDEO  --list-formats | grep MJPG; then
+                if [ "$FS" -ne "0" ]; then
+                    FFS="-fs $(( ${WIDTH} * ${HEIGHT} * 2 ))"
+                else
+                    FFS=""
+                fi
                 /usr/bin/v4l2-ctl --set-fmt-video=width=${WIDTH},height=${HEIGHT},pixelformat=1
                 if [ -f /THIS_IS_NOT_YOUR_ROOT_FILESYSTEM ]; then
-                    start-stop-daemon -S -b -m -p $PID_FILE --exec /opt/config/mod/.shell/eabi/mjpg_streamer -- -o "/opt/config/mod/.shell/eabi/lib/output_http.so -w /opt/mjpg-streamer/www -p 8080" -i  "/opt/config/mod/.shell/eabi/lib/input_uvc.so -b 1 -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS -fs $(( ${WIDTH} * ${HEIGHT} * 2 ))"
+                    start-stop-daemon -S -b -m -p $PID_FILE --exec /opt/config/mod/.shell/eabi/mjpg_streamer -- -o "/opt/config/mod/.shell/eabi/lib/output_http.so -w /opt/mjpg-streamer/www -p 8080" -i  "/opt/config/mod/.shell/eabi/lib/input_uvc.so -b 1 -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS $FFS"
                 else
-                    start-stop-daemon -S -b -m -p $PID_FILE --exec /usr/bin/mjpg_streamer -- -o "/usr/lib/mjpg-streamer/output_http.so -w /usr/share/mjpg-streamer/www -p 8080" -i  "/usr/lib/mjpg-streamer/input_uvc.so -b 1 -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS -fs $(( ${WIDTH} * ${HEIGHT} * 2 ))"
+                    start-stop-daemon -S -b -m -p $PID_FILE --exec /usr/bin/mjpg_streamer -- -o "/usr/lib/mjpg-streamer/output_http.so -w /usr/share/mjpg-streamer/www -p 8080" -i  "/usr/lib/mjpg-streamer/input_uvc.so -b 1 -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS $FFS"
                 fi
             else
                 FORMAT=$(v4l2-ctl -d /dev/$VIDEO --list-formats| grep '\[' | tail -1| cut -d "'" -f2)
                 if [ -f /THIS_IS_NOT_YOUR_ROOT_FILESYSTEM ]; then
-                    umount /data/.mod/
+                    [ "$1" != init ] && umount /data/.mod/
                     chroot $MOD start-stop-daemon -S -b -m -p $PID_FILE --exec /bin/ustreamer -- -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS --format=$FORMAT -s 0.0.0.0
-                    mount --bind /data/lost+found /data/.mod
+                    [ "$1" != init ] && mount --bind /data/lost+found /data/.mod
                 else
                     start-stop-daemon -S -b -m -p $PID_FILE --exec /bin/ustreamer -- -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS --format=$FORMAT -s 0.0.0.0
                 fi
@@ -49,12 +59,18 @@ stop() {
 restart() {
     stop
     sleep 2
-    start
+    up
 }
 
 case "$1" in
   start)
-        start &>/opt/config/mod_data/log/camera.log
+        start
+        ;;
+  up)
+        up &>/opt/config/mod_data/log/camera.log
+        ;;
+  init)
+        up init &>/opt/config/mod_data/log/camera.log
         ;;
   stop)
         stop
@@ -63,7 +79,7 @@ case "$1" in
         restart
         ;;
   *)
-        echo "Usage: $0 {start|stop|restart}"
+        echo "Usage: $0 {start|stop|restart|up|init}"
         exit 1
 esac
 

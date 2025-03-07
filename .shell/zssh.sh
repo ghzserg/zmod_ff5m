@@ -5,7 +5,7 @@
 
 /opt/config/mod/.shell/znice.sh
 
-/root/printer_data/scripts/zversion.sh
+/opt/config/mod/.shell/zversion.sh
 
 if [ $# -ne 8 ]; then echo "Используйте (START|STOP|RESTART|RELOAD) SSH_SERVER SSH_PORT SSH_USER VIDEO_PORT MOON_PORT REMOTE_RUN RESTART|NOTRESTART"; exit 1; fi
 

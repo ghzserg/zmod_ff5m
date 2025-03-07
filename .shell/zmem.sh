@@ -1,6 +1,6 @@
 #!/bin/sh
 
-/root/printer_data/scripts/ps_mem.py -S >/tmp/list.txt
+/opt/config/mod/.shell/ps_mem.py -S >/tmp/list.txt
 awk '{
     gsub(/python3.7/, "Klipper");
     gsub(/python3.12/, "Moonraker");

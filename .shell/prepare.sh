@@ -126,6 +126,9 @@ start_prepare()
     cp /opt/tslib-1.12/etc/pointercal /tmp/pointercal
     cp /opt/tslib-1.12/etc/ts.conf /tmp/ts.conf
 
+    # Запуск камеры
+    /etc/init.d/S98camera init
+
     start_moon
 }
 

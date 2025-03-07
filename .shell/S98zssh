@@ -9,7 +9,7 @@ if ! [ -f /opt/config/mod_data/ssh.key ] || ! [ -f /opt/config/mod_data/ssh.pub.
 fi
 
 if ! [ -f /opt/config/mod_data/ssh.conf ]; then
-    /root/printer_data/scripts/zssh.sh STOP 127.0.0.1 22 user 8080 7125 NONE NOTRESTART
+    /opt/config/mod/.shell/zssh.sh STOP 127.0.0.1 22 user 8080 7125 NONE NOTRESTART
 fi
 
 echo "Версия zmod: $(cat /opt/config/mod/version.txt) $(cat /opt/config/mod_data/date.txt)"
