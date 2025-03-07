@@ -71,9 +71,9 @@ start_moon()
     VER=$(cat /root/version)
     chroot ${MOD} /opt/config/mod/.shell/root/start.sh "$SWAP" "$VER" "$MACHINE" &
 
-    mkdir -p ${REMOUNT_MOD}
+    [ ${NEED_REMOUNT} -eq 1 ] && mkdir -p ${REMOUNT_MOD}
     sleep 10
-    mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}
+    [ ${NEED_REMOUNT} -eq 1 ] && mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}
     mount
     ps
     sleep 60
@@ -136,7 +136,7 @@ start_prepare()
 if [ -f /opt/config/mod/SKIP_ZMOD ]
  then
     rm -f /opt/config/mod/SKIP_ZMOD
-    mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}
+    [ ${NEED_REMOUNT} -eq 1 ] && mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}
     exit 0
 fi
 

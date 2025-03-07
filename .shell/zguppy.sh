@@ -7,10 +7,10 @@ unset LD_PRELOAD
 up()
 {
     if [ -f /THIS_IS_NOT_YOUR_ROOT_FILESYSTEM ]; then
-        umount ${UMOUNT_MOD}
+        [ ${NEED_REMOUNT} -eq 1 ] && umount ${UMOUNT_MOD}
         chroot ${MOD} /etc/init.d/S80guppyscreen start &
         sleep 15
-        mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}
+        [ ${NEED_REMOUNT} -eq 1 ] && mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}
     else
         /etc/init.d/S80guppyscreen up
     fi
@@ -19,10 +19,10 @@ up()
 stop()
 {
     if [ -f /THIS_IS_NOT_YOUR_ROOT_FILESYSTEM ]; then
-        umount ${UMOUNT_MOD}
+        [ ${NEED_REMOUNT} -eq 1 ] && umount ${UMOUNT_MOD}
         chroot ${MOD} /etc/init.d/S80guppyscreen stop &
         sleep 15
-        mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}
+        [ ${NEED_REMOUNT} -eq 1 ] && mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}
     else
         /etc/init.d/S80guppyscreen stop
     fi
