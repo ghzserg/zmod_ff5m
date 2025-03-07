@@ -19,7 +19,8 @@ prepare_chroot()
     [ -d /etc/init.d/ ] || mkdir -p /etc/init.d/
 
     [ -L /etc/init.d/S98zssh ] || ln -s /opt/config/mod/.shell/S98zssh /etc/init.d/
-    [ -L /etc/init.d/S98camera ] || ln -s /opt/config/mod/.shell/S98camera /etc/init.d/
+    [ -L /etc/init.d/S98camera ] && rm -f /etc/init.d/S98camera
+    [ -L /etc/init.d/S99camera ] || ln -s /opt/config/mod/.shell/root/S99camera /etc/init.d/
 
     [ -L /etc/init.d/S35tslib ] || ln -s /opt/config/mod/.shell/root/S35tslib /etc/init.d/
     [ -L /etc/init.d/S80guppyscreen ] || ln -s /opt/config/mod/.shell/root/S80guppyscreen /etc/init.d/

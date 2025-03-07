@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# Start Camera
+#
+
+source /opt/config/mod/.shell/0.sh
+
+[ "$1" == "start" ] && exit 0
+
+[ "$1" != "init" ] && umount ${UMOUNT_MOD}
+chroot ${MOD} /etc/init.d/S99camera $1
+[ "$1" != "init" ] && mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}

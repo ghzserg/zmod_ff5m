@@ -152,6 +152,7 @@ fix_config()
     [ -f /etc/init.d/S50sshd ] && rm -f /etc/init.d/S50sshd
     [ -f /etc/init.d/S55date ] && rm -f /etc/init.d/S55date
     [ -f /bin/dropbearmulti ] && rm -f /bin/dropbearmulti
+    [ -f /etc/init.d/S98camera ] && rm -f /etc/init.d/S98camera
 
     check_link /bin/dropbearkey /opt/config/mod/.shell/eabi/dropbear
     check_link /bin/dropbear /opt/config/mod/.shell/eabi/dropbear
@@ -160,6 +161,7 @@ fix_config()
     check_link /bin/ssh /opt/config/mod/.shell/eabi/dropbear
     check_link /etc/init.d/S60dropbear /opt/config/mod/.shell/S60dropbear
     check_link /etc/init.d/S00fix /opt/config/mod/.shell/fix_config.sh
+    check_link /etc/init.d/S99camera /opt/config/mod/.shell/S99camera
     check_link /usr/bin/audio.py /opt/config/mod/.shell/root/audio/audio.py
 
     NEED_REBOOT=0

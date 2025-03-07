@@ -10,6 +10,7 @@ remove_base()
     rm /etc/init.d/S00fix
     rm /etc/init.d/S99moon
     rm /etc/init.d/S98camera
+    rm /etc/init.d/S99camera
     rm /etc/init.d/S98zssh
     rm /etc/init.d/K99moon
     # REMOVE SCRIPTS
@@ -127,7 +128,7 @@ start_prepare()
     cp /opt/tslib-1.12/etc/ts.conf /tmp/ts.conf
 
     # Запуск камеры
-    /etc/init.d/S98camera init
+    /etc/init.d/S99camera init
 
     start_moon
 }

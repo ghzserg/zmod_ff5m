@@ -34,4 +34,4 @@ VIDEO=$5
 FS=$6
 " >/opt/config/mod_data/camera.conf
 
-[ $7 = "RESTART" ] && /etc/init.d/S98camera restart
+[ $7 = "RESTART" ] && /etc/init.d/S99camera restart
