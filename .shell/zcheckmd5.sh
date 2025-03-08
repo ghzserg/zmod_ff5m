@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if ! [ -f /THIS_IS_NOT_YOUR_ROOT_FILESYSTEM ]; then
+if [ -f /ZMOD ]; then
     echo "Проверка системы из Klipper 12 не поддерживается. Используйте родной Klipper 11."
     exit
 fi

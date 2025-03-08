@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if ! [ -f /THIS_IS_NOT_YOUR_ROOT_FILESYSTEM ]; then
+if [ -f /ZMOD ]; then
     echo "Рестарт KLIPPER не поддерживается"
     exit
 fi

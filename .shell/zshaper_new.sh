@@ -4,7 +4,7 @@ source /opt/config/mod/.shell/0.sh
 
 unset LD_PRELOAD
 
-if ! [ -f /THIS_IS_NOT_YOUR_ROOT_FILESYSTEM ]; then
+if [ -f /ZMOD ]; then
     /opt/config/mod/.shell/root/zshaper_new.sh $@
 else
     [ ${NEED_REMOUNT} -eq 1 ] && while umount ${UMOUNT_MOD} 2>/dev/null; do a=b; done

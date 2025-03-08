@@ -21,7 +21,7 @@ CLIENT=$WEB
 
 sync
 
-if ! [ -f /THIS_IS_NOT_YOUR_ROOT_FILESYSTEM ]; then
+if [ -f /ZMOD ]; then
     /opt/config/mod/.shell/root/S70httpd restart
 else
     [ ${NEED_REMOUNT} -eq 1 ] && umount ${UMOUNT_MOD}

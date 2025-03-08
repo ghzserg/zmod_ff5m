@@ -4,6 +4,8 @@ source /opt/config/mod/.shell/0.sh
 
 prepare_chroot()
 {
+
+    echo ZMOD >/ZMOD
     mv /tmp/localtime /etc/localtime
 
     mv /tmp/pointercal /etc/pointercal

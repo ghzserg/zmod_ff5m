@@ -2,7 +2,7 @@
 
 up()
 {
-    if [ -f /THIS_IS_NOT_YOUR_ROOT_FILESYSTEM ]; then
+    if ! [ -f /ZMOD ]; then
         /etc/init.d/S99moon up
     else
         /etc/init.d/S65moonraker start
@@ -12,7 +12,7 @@ up()
 
 stop()
 {
-    if [ -f /THIS_IS_NOT_YOUR_ROOT_FILESYSTEM ]; then
+    if ! [ -f /ZMOD ]; then
         /etc/init.d/S99moon stop
     else
         /etc/init.d/S65moonraker stop

@@ -8,7 +8,7 @@ source /opt/config/mod/.shell/0.sh
 
 if [ $# -ne 2 ]; then echo "Используйте $0 PRINT|CLOSE FILE"; exit 1; fi
 
-if ! [ -f /THIS_IS_NOT_YOUR_ROOT_FILESYSTEM ]; then
+if [ -f /ZMOD ]; then
     CURL="/usr/bin/curl"
 else
     CURL="/opt/cloud/curl-7.55.1-https/bin/curl"

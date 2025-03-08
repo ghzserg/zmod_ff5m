@@ -9,7 +9,7 @@ for i in /opt/PROGRAM/control/*/; do
         cd "$i"
         echo "">Update
 
-        if [ "$1" -eq 1 ] && [ -f /THIS_IS_NOT_YOUR_ROOT_FILESYSTEM ]; then
+        if [ "$1" -eq 1 ] && ! [ -f /ZMOD ]; then
             start-stop-daemon -S -b -x /opt/config/mod/.shell/update_mcu.sh -- mainboard
         else
             /usr/bin/audio_midi.sh For_Elise.mid

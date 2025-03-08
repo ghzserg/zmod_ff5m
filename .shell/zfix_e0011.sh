@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ -f /THIS_IS_NOT_YOUR_ROOT_FILESYSTEM ] || exit 0
+[ -f /ZMOD ] && exit 0
 
 F="/opt/klipper/klippy/mcu.py"
 
