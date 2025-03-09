@@ -46,22 +46,22 @@ restore_base()
     china_razbl cloud.sz3dp.com
     china_razbl polar3d.com
 
-    grep -q _output_callback_gcode /opt/klipper/klippy/webhooks.py && cp /opt/config/mod/.shell/webhooks.py.orig /opt/klipper/klippy/webhooks.py
-    grep -q ZLOAD_VARIABLE /opt/klipper/klippy/extras/save_variables.py && cp /opt/config/mod/.shell/save_variables.py.orig /opt/klipper/klippy/extras/save_variables.py
-    grep -q zmod /opt/klipper/klippy/extras/spi_temperature.py && cp /opt/config/mod/.shell/spi_temperature.py.orig /opt/klipper/klippy/extras/spi_temperature.py
-    grep -q receive_time /opt/klipper/klippy/extras/buttons.py && cp /opt/config/mod/.shell/buttons.py.orig /opt/klipper/klippy/extras/buttons.py
-    rm -f /opt/klipper/klippy/extras/zmod.py
+    grep -q _output_callback_gcode ${KLIPPER_DIR}/klippy/webhooks.py && cp /opt/config/mod/.shell/webhooks.py.orig ${KLIPPER_DIR}/klippy/webhooks.py
+    grep -q ZLOAD_VARIABLE ${KLIPPER_DIR}/klippy/extras/save_variables.py && cp /opt/config/mod/.shell/save_variables.py.orig ${KLIPPER_DIR}/klippy/extras/save_variables.py
+    grep -q zmod ${KLIPPER_DIR}/klippy/extras/spi_temperature.py && cp /opt/config/mod/.shell/spi_temperature.py.orig ${KLIPPER_DIR}/klippy/extras/spi_temperature.py
+    grep -q receive_time ${KLIPPER_DIR}/klippy/extras/buttons.py && cp /opt/config/mod/.shell/buttons.py.orig ${KLIPPER_DIR}/klippy/extras/buttons.py
+    rm -f ${KLIPPER_DIR}/klippy/extras/zmod.py
 
     rm -f /etc/profile.d/path.sh
 
-    F="/opt/klipper/klippy/toolhead.py"
+    F="${KLIPPER_DIR}/klippy/toolhead.py"
     grep -q "LOOKAHEAD_FLUSH_TIME = 0.5" $F || sed -i 's|^LOOKAHEAD_FLUSH_TIME.*|LOOKAHEAD_FLUSH_TIME = 0.5|' $F
 
-    F="/opt/klipper/klippy/mcu.py"
+    F="${KLIPPER_DIR}/klippy/mcu.py"
     grep -q "TRSYNC_TIMEOUT = 0.025" $F || sed -i 's|^TRSYNC_TIMEOUT = .*|TRSYNC_TIMEOUT = 0.025|' $F
 
-    if [ -L /opt/klipper/klippy/extras/load_cell_tare.py ] || [ -f /opt/klipper/klippy/extras/load_cell_tare.py ]; then
-        rm -f /opt/klipper/klippy/extras/load_cell_tare.py
+    if [ -L ${KLIPPER_DIR}/klippy/extras/load_cell_tare.py ] || [ -f ${KLIPPER_DIR}/klippy/extras/load_cell_tare.py ]; then
+        rm -f ${KLIPPER_DIR}/klippy/extras/load_cell_tare.py
     fi
 
     # Удаляем controller_fan driver_fan
@@ -209,17 +209,17 @@ unset LD_PRELOAD
         china_block polar3d.com
     fi
 
-    grep -q "zmod 1.1" /opt/klipper/klippy/webhooks.py || cp /opt/config/mod/.shell/webhooks.py /opt/klipper/klippy/webhooks.py
-    grep -q ZLOAD_VARIABLE /opt/klipper/klippy/extras/save_variables.py || cp /opt/config/mod/.shell/save_variables.py /opt/klipper/klippy/extras/save_variables.py
-    grep -q "Zcontrol 1.1" /opt/klipper/klippy/extras/spi_temperature.py || cp /opt/config/mod/.shell/spi_temperature.py /opt/klipper/klippy/extras/spi_temperature.py
-    check_link /opt/klipper/klippy/extras/zmod.py /opt/config/mod/.shell/zmod.py
+    grep -q "zmod 1.1" ${KLIPPER_DIR}/klippy/webhooks.py || cp /opt/config/mod/.shell/webhooks.py ${KLIPPER_DIR}/klippy/webhooks.py
+    grep -q ZLOAD_VARIABLE ${KLIPPER_DIR}/klippy/extras/save_variables.py || cp /opt/config/mod/.shell/save_variables.py ${KLIPPER_DIR}/klippy/extras/save_variables.py
+    grep -q "Zcontrol 1.1" ${KLIPPER_DIR}/klippy/extras/spi_temperature.py || cp /opt/config/mod/.shell/spi_temperature.py ${KLIPPER_DIR}/klippy/extras/spi_temperature.py
+    check_link ${KLIPPER_DIR}/klippy/extras/zmod.py /opt/config/mod/.shell/zmod.py
 
     # Fix possible ordering issue if a callback blocks in button handler#6440
-    grep -q receive_time /opt/klipper/klippy/extras/buttons.py || cp /opt/config/mod/.shell/buttons.py /opt/klipper/klippy/extras/buttons.py
+    grep -q receive_time ${KLIPPER_DIR}/klippy/extras/buttons.py || cp /opt/config/mod/.shell/buttons.py ${KLIPPER_DIR}/klippy/extras/buttons.py
 
-    grep -q zmod_1.0 /opt/klipper/klippy/extras/gcode_shell_command.py || cp /opt/config/mod/.shell/gcode_shell_command.py /opt/klipper/klippy/extras/gcode_shell_command.py
-    if [ -L /opt/klipper/klippy/extras/load_cell_tare.py ] || [ -f /opt/klipper/klippy/extras/load_cell_tare.py ]; then
-        rm -f /opt/klipper/klippy/extras/load_cell_tare.py
+    grep -q zmod_1.0 ${KLIPPER_DIR}/klippy/extras/gcode_shell_command.py || cp /opt/config/mod/.shell/gcode_shell_command.py ${KLIPPER_DIR}/klippy/extras/gcode_shell_command.py
+    if [ -L ${KLIPPER_DIR}/klippy/extras/load_cell_tare.py ] || [ -f ${KLIPPER_DIR}/klippy/extras/load_cell_tare.py ]; then
+        rm -f ${KLIPPER_DIR}/klippy/extras/load_cell_tare.py
     fi
 
     [[ $(tail -c1 ${PRINTER_BASE}) != "" ]] && echo >> ${PRINTER_BASE} && NEED_REBOOT=1
@@ -475,7 +475,7 @@ stepper: stepper_x, stepper_y, stepper_z
 #                done
 #            else
 #                # Если обновлений нет
-#                mount -o bind /opt/config/mod/.shell/klipper12.sh /opt/klipper/start.sh
+#                mount -o bind /opt/config/mod/.shell/klipper12.sh ${KLIPPER_DIR}/start.sh
 #                sync
 #            fi
 #        else

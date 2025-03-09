@@ -2,16 +2,16 @@
 
 source /opt/config/mod/.shell/0.sh
 
-[ ${NEED_REMOUNT} -eq 0 ] && exit 0
+[ ${FF5X} -eq 1 ] && echo "Еще не реализованно" && exit 0
 [ -f /ZMOD ] && exit 0
 
-F="/opt/klipper/klippy/toolhead.py"
+F="${KLIPPER_DIR}/klippy/toolhead.py"
 
 clear_klipper()
 {
-    find /opt/klipper/ -name __pycache__ -type d -exec rm -r "{}" \; 2>/dev/null
+    find ${KLIPPER_DIR}/ -name __pycache__ -type d -exec rm -r "{}" \; 2>/dev/null
     sync
-    find /opt/klipper/ -name *.pyc -exec rm "{}" \; 2>/dev/null
+    find ${KLIPPER_DIR}/ -name *.pyc -exec rm "{}" \; 2>/dev/null
     sync
     echo "Klipper был изменен. Сейчас будет перезагрузка"
     sleep 5

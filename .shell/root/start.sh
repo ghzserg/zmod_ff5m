@@ -87,7 +87,7 @@ grep -q "PRETTY_NAME=\"${V1} -> ${V2}\"" /etc/os-release || sed -i "s|PRETTY_NAM
 
 mkdir -p ${DATA_GCODES}/tmp
 
-[ ${NEED_REMOUNT} -eq 1 ] && mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}
+[ ${FF5X} -eq 0 ] && mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}
 
 #if grep -q "klipper12 = 1" /opt/config/mod_data/variables.cfg; then
 #    /opt/config/mod/.shell/root/S60klipper start

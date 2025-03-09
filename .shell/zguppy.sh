@@ -9,10 +9,10 @@ up()
     if [ -f /ZMOD ]; then
         /etc/init.d/S80guppyscreen up
     else
-        [ ${NEED_REMOUNT} -eq 1 ] && umount ${UMOUNT_MOD}
+        [ ${FF5X} -eq 0 ] && umount ${UMOUNT_MOD}
         chroot ${MOD} /etc/init.d/S80guppyscreen start &
         sleep 15
-        [ ${NEED_REMOUNT} -eq 1 ] && mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}
+        [ ${FF5X} -eq 0 ] && mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}
     fi
 }
 
@@ -21,10 +21,10 @@ stop()
     if [ -f /ZMOD ]; then
         /etc/init.d/S80guppyscreen stop
     else
-        [ ${NEED_REMOUNT} -eq 1 ] && umount ${UMOUNT_MOD}
+        [ ${FF5X} -eq 0 ] && umount ${UMOUNT_MOD}
         chroot ${MOD} /etc/init.d/S80guppyscreen stop &
         sleep 15
-        [ ${NEED_REMOUNT} -eq 1 ] && mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}
+        [ ${FF5X} -eq 0 ] && mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}
     fi
 }
 

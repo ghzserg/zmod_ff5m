@@ -30,7 +30,7 @@ remove_base()
     # Remove ROOT
     rm -rf /etc/init.d/S50sshd /etc/init.d/S55date /bin/dropbearmulti /bin/dropbear /bin/dropbearkey /bin/scp /etc/dropbear /etc/init.d/S60dropbear
     # Remove BEEP
-    rm -f /usr/bin/audio.py /usr/bin/audio /usr/lib/python3.7/site-packages/audio.py /usr/bin/audio_midi.sh /opt/klipper/klippy/extras/gcode_shell_command.py
+    rm -f /usr/bin/audio.py /usr/bin/audio /usr/lib/python3.7/site-packages/audio.py /usr/bin/audio_midi.sh ${KLIPPER_DIR}/klippy/extras/gcode_shell_command.py
     rm -rf /usr/lib/python3.7/site-packages/mido/
     sync
 
@@ -71,13 +71,13 @@ start_moon()
     VER=$(cat /root/version)
     chroot ${MOD} /opt/config/mod/.shell/root/start.sh "$SWAP" "$VER" "$MACHINE" &
 
-    [ ${NEED_REMOUNT} -eq 1 ] && mkdir -p ${REMOUNT_MOD}
+    [ ${FF5X} -eq 0 ] && mkdir -p ${REMOUNT_MOD}
     sleep 10
-    [ ${NEED_REMOUNT} -eq 1 ] && mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}
+    [ ${FF5X} -eq 0 ] && mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}
     mount
     ps
     sleep 60
-    umount /opt/klipper/start.sh
+    umount ${KLIPPER_DIR}/start.sh
 }
 
 start_prepare()
@@ -114,13 +114,13 @@ start_prepare()
     if  ! [ -d ${MOD}/opt/klipper/docs ]
      then
         mkdir -p ${MOD}/opt/klipper/docs
-        cp /opt/klipper/docs/* ${MOD}/opt/klipper/docs
+        cp ${KLIPPER_DIR}/docs/* ${MOD}/opt/klipper/docs
     fi
 
     if ! [ -d ${MOD}/opt/klipper/config ]
      then
         mkdir -p ${MOD}/opt/klipper/config
-        cp /opt/klipper/config/* ${MOD}/opt/klipper/config
+        cp ${KLIPPER_DIR}/config/* ${MOD}/opt/klipper/config
     fi
 
     cat /etc/localtime >/tmp/localtime
@@ -136,7 +136,7 @@ start_prepare()
 if [ -f /opt/config/mod/SKIP_ZMOD ]
  then
     rm -f /opt/config/mod/SKIP_ZMOD
-    [ ${NEED_REMOUNT} -eq 1 ] && mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}
+    [ ${FF5X} -eq 0 ] && mount --bind ${REMOUNT_MOD} ${UMOUNT_MOD}
     exit 0
 fi
 
