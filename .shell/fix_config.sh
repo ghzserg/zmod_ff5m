@@ -228,6 +228,8 @@ unset LD_PRELOAD
         NEED_REBOOT=1
     fi
 
+
+
     grep -q '^\[include check_md5.cfg\]' ${PRINTER_CFG} && sed -i '/^\[include check_md5.cfg\]/d' ${PRINTER_CFG} && NEED_REBOOT=1
 
     grep -q '^\[include ./mod/mod.cfg\]' ${PRINTER_CFG} && grep -q '^\[include ./mod/display_off.cfg\]' ${PRINTER_CFG} && sed -i '/^\[include .\/mod\/display_off.cfg\]/d' ${PRINTER_CFG} && NEED_REBOOT=1
@@ -446,6 +448,13 @@ stepper: stepper_x, stepper_y, stepper_z
     if [[ $(tail -n2 "$PRINTER_BASE" | wc -l) -lt 2 || $(tail -n2 "$PRINTER_BASE" | grep -vc '^$') -ne 0 ]]; then
         echo >> "$PRINTER_BASE"
         NEED_REBOOT=1
+    fi
+    awk 'NF {last = NR} {lines[NR] = $0} END {for (i=1; i<=last; i++) print lines[i]}' ${PRINTER_CFG} >${PRINTER_CFG}.save
+    if diff ${PRINTER_CFG} ${PRINTER_CFG}.save; then
+        mv ${PRINTER_CFG}.save ${PRINTER_CFG}
+        NEED_REBOOT=1
+    else
+        rm ${PRINTER_CFG}.save
     fi
 
     if [ ${NEED_REBOOT} -eq 1 ]
