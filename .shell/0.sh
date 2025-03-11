@@ -9,3 +9,4 @@ FF5X=0
 KEY_TYPE="ed25519"
 KLIPPER_DIR="/opt/klipper"
 TS_LIB="/opt/tslib-1.12/etc"
+VIDEO="video0"

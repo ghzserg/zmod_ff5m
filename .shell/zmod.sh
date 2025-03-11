@@ -3,7 +3,7 @@
 up()
 {
     if ! [ -f /ZMOD ]; then
-        /etc/init.d/S99moon up
+        /opt/config/mod/.shell/S99moon up
     else
         /etc/init.d/S65moonraker start
         /etc/init.d/S70httpd start
@@ -13,7 +13,7 @@ up()
 stop()
 {
     if ! [ -f /ZMOD ]; then
-        /etc/init.d/S99moon stop
+        /opt/config/mod/.shell/S99moon stop
     else
         /etc/init.d/S65moonraker stop
         /etc/init.d/S70httpd stop
