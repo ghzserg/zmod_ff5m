@@ -13,9 +13,7 @@ start() {
     NEED="N"
     if [ -f "/opt/config/mod_data/database/moonraker-sql.db" ]
         then
-            sqlite3 /opt/config/mod_data/database/moonraker-sql.db </opt/config/mod/fluidd.sql
-#            moonraker_uuid=$(sqlite3 /opt/config/mod_data/database/moonraker-sql.db "SELECT VALUE FROM namespace_store WHERE namespace='moonraker' AND key='instance_id';" 2>/dev/null)
-#            if [ "${moonraker_uuid}" != "" ]; then echo -n "${moonraker_uuid}" >/root/printer_data/.moonraker.uuid; fi
+            grep -q "save_moonraker = 1" /opt/config/mod_data/variables.cfg || sqlite3 /opt/config/mod_data/database/moonraker-sql.db </opt/config/mod/fluidd.sql
         else
             NEED="Y"
     fi
