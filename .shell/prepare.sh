@@ -2,8 +2,12 @@
 
 set -x
 
-WORKDIR=$(dirname $0)
-source $WORKDIR/0.sh
+if [ -f /opt/config/mod/.shell/0.sh ]; then
+    source /opt/config/mod/.shell/0.sh
+else if [ -f /usr/data/config/mod/.shell/0.sh ]; then
+    source /usr/data/config/mod/.shell/0.sh
+fi
+fi
 
 remove_base()
 {
