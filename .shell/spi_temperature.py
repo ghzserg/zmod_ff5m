@@ -98,7 +98,7 @@ class SensorBase:
         # zmod
         if temp>self.max_temp and self.zcontrol == 1:
             if self.zcommand == 1:
-                gcmd.respond_raw("!! Удар сопла о стол или отрыв детали. PAUSE")
+                self.gcode.respond_raw("!! Удар сопла о стол или отрыв детали. PAUSE")
                 self.gcode.run_script("PAUSE")
             else:
                 self.printer.invoke_async_shutdown("Удар сопла о стол или отрыв детали. FIRMWARE_RESTART")
