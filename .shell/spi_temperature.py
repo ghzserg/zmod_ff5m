@@ -7,7 +7,7 @@
 import math, logging
 from . import bus
 
-# Zcontrol 1.1
+# Zcontrol 1.2
 
 ######################################################################
 # SensorBase
@@ -32,9 +32,12 @@ class SensorBase:
         self.oid = oid = mcu.create_oid()
 
         self.zcontrol = 0
+        self.zcommand = 0
+        self.gcode = self.printer.lookup_object('gcode')
         if (chip_type == 'MAX31856'):
-            self.gcode = self.printer.lookup_object('gcode')
             self.gcode.register_command('ZCONTROL_ON', self.cmd_ZCONTROL_ON)
+            self.gcode.register_command('ZCONTROL_PAUSE', self.cmd_ZCONTROL_PAUSE)
+            self.gcode.register_command('ZCONTROL_ABORT', self.cmd_ZCONTROL_ABORT)
             self.gcode.register_command('ZCONTROL_STATUS', self.cmd_ZCONTROL_STATUS)
             self.gcode.register_command('ZCONTROL_OFF', self.cmd_ZCONTROL_OFF)
         mcu.register_response(self._handle_spi_response,
@@ -44,6 +47,12 @@ class SensorBase:
     def cmd_ZCONTROL_ON(self, gcmd):
         self.zcontrol = 1
 
+    def cmd_ZCONTROL_PAUSE(self, gcmd):
+        self.zcommand = 1
+
+    def cmd_ZCONTROL_ABORT(self, gcmd):
+        self.zcommand = 0
+
     def cmd_ZCONTROL_STATUS(self, gcmd):
         if self.max_temp == 2048:
             gcmd.respond_info("Контроль веса не настроен. // Для настройки: NOZZLE_CONTROL WEIGHT=1500")
@@ -52,6 +61,10 @@ class SensorBase:
                 gcmd.respond_info("Вес: %d; Контроль настроен и активен." % (self.max_temp))
             else:
                 gcmd.respond_info("Вес: %d; Контроль настроен и не активен." % (self.max_temp))
+            if self.zcommand == 1:
+                gcmd.respond_info("При сработке вызывается PAUSE. // ZCONTROL_PAUSE" % (self.max_temp))
+            else:
+                gcmd.respond_info("При сработке отключается Klipper. // ZCONTROL_ABORT" % (self.max_temp))
 
     def cmd_ZCONTROL_OFF(self, gcmd):
         self.zcontrol = 0
@@ -84,7 +97,10 @@ class SensorBase:
         temp = self.calc_temp(params['value'])
         # zmod
         if temp>self.max_temp and self.zcontrol == 1:
-            self.printer.invoke_async_shutdown("Удар сопла о стол или отрыв детали")
+            if self.zcommand == 1:
+                self.gcode.run_script("PAUSE")
+            else:
+                self.printer.invoke_async_shutdown("Удар сопла о стол или отрыв детали")
             return
         next_clock      = self.mcu.clock32_to_clock64(params['next_clock'])
         last_read_clock = next_clock - self._report_clock
