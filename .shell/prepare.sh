@@ -145,7 +145,7 @@ start_prepare()
     cp ${TS_LIB}/ts.conf /tmp/ts.conf
 
     # Запуск камеры
-    [ ${FF5X} -eq 0 ] && /etc/init.d/S99camera init
+    [ ${FF5X} -eq 0 ] && ${MOD_CONF}/mod/.shell/S99camera init
 
     start_moon
 }
