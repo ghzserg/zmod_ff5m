@@ -7,7 +7,7 @@
 import math, logging
 from . import bus
 
-# Zcontrol 1.5
+# Zcontrol 1.6
 
 ######################################################################
 # SensorBase
@@ -102,6 +102,7 @@ class SensorBase:
                 self.gcode.respond_raw("!! Удар сопла о стол или отрыв детали. PAUSE")
                 pause_resume = self.printer.lookup_object('pause_resume')
                 pause_resume.send_pause_command()
+                self.printer.get_reactor().pause(self.printer.get_reactor().monotonic())
                 self.gcode.run_script("PAUSE\nM400\n")
             else:
                 self.printer.invoke_async_shutdown("Удар сопла о стол или отрыв детали. FIRMWARE_RESTART")
