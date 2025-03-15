@@ -16,3 +16,5 @@ MOD_CONF="/opt/config"
 PYTHON="/usr/bin/python"
 PYTHON_DIR="/usr/lib/python3.7"
 CURL="/opt/cloud/curl-7.55.1-https/bin/curl"
+PROGRAM_DIR="/opt/PROGRAM/"
+
