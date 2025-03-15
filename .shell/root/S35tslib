@@ -12,8 +12,8 @@ export TSLIB_CALIBFILE=/etc/pointercal
 export TSLIB_FBDEVICE=/dev/fb0
 
 TSNAME="Touchscreen"
-EVENT=event1
-for i in 1 2 3;
+EVENT=event0
+for i in 0 1 2 3;
 do
         file=/sys/class/input/event$i/device/name
         for name in `cat $file`
