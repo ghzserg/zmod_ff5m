@@ -3,12 +3,14 @@
 # Start guppyscreen
 #
 
+source /opt/config/mod/.shell/0.sh
+
 GUPPYSCREEN=/root/guppyscreen/guppyscreen
 PID_FILE=/run/guppyscreen.pid
 NICENESS=10
 
 start() {
-    backlight 0
+    [ ${FF5X} -eq 0 ] && backlight 0
 
     mv /opt/config/mod_data/log/guppyscreen.4.log /opt/config/mod_data/log/guppyscreen.5.log
     mv /opt/config/mod_data/log/guppyscreen.3.log /opt/config/mod_data/log/guppyscreen.4.log
@@ -18,8 +20,8 @@ start() {
 
     /etc/init.d/S35tslib start
     killall guppyscreen
-    backlight 60
     start-stop-daemon -S -b -m -p $PID_FILE -N $NICENESS --exec /bin/sh -- -c $GUPPYSCREEN
+    [ ${FF5X} -eq 0 ] && backlight 60
 }
 
 stop() {

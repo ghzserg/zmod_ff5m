@@ -5,11 +5,28 @@ PIDFILE=/run/ts_uinput.pid
 NICENESS=9
 
 # variables must be present or ts_uinput will fail. uinput needs to be loaded
-export TSLIB_TSDEVICE=/dev/input/event0
+TSLIB_TSDEVICE=/dev/input/event0
 export TSLIB_PLUGINDIR=/usr/lib/ts
 export TSLIB_CONFFILE=/etc/ts.conf
 export TSLIB_CALIBFILE=/etc/pointercal
 export TSLIB_FBDEVICE=/dev/fb0
+
+TSNAME="Touchscreen"
+EVENT=event1
+for i in 1 2 3;
+do
+        file=/sys/class/input/event$i/device/name
+        for name in `cat $file`
+        do
+                echo $name
+        done
+        if [ "$name" == $TSNAME ];then
+               EVENT=event$i
+               break;
+        fi
+done
+
+export TSLIB_TSDEVICE=/dev/input/$EVENT
 
 TSLIB_ARGS=""
 
