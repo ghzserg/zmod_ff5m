@@ -10,6 +10,9 @@ PID_FILE=/run/guppyscreen.pid
 NICENESS=10
 
 start() {
+    xzcat /opt/config/mod/.shell/screen_off.raw.xz > /dev/fb0
+    [ ${FF5X} -eq 0 ] && backlight 0
+
     TSNAME="Touchscreen"
     EVENT=event0
     for i in 0 1 2 3; do
@@ -29,9 +32,6 @@ start() {
     export TSLIB_CALIBFILE=/etc/pointercal
     export TSLIB_FBDEVICE=/dev/fb0
 
-    xzcat /opt/config/mod/.shell/screen_off.raw.xz > /dev/fb0
-    [ ${FF5X} -eq 0 ] && backlight 0
-
     mv /opt/config/mod_data/log/guppyscreen.4.log /opt/config/mod_data/log/guppyscreen.5.log
     mv /opt/config/mod_data/log/guppyscreen.3.log /opt/config/mod_data/log/guppyscreen.4.log
     mv /opt/config/mod_data/log/guppyscreen.2.log /opt/config/mod_data/log/guppyscreen.3.log
@@ -39,8 +39,8 @@ start() {
     mv /opt/config/mod_data/log/guppyscreen.log /opt/config/mod_data/log/guppyscreen.1.log
 
     killall guppyscreen
-    start-stop-daemon -S -b -m -p $PID_FILE -N $NICENESS --exec /bin/sh -- -c $GUPPYSCREEN
     [ ${FF5X} -eq 0 ] && backlight 60
+    start-stop-daemon -S -b -m -p $PID_FILE -N $NICENESS --exec /bin/sh -- -c $GUPPYSCREEN
 }
 
 stop() {
