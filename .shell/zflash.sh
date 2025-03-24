@@ -28,11 +28,10 @@ MACHINE="Неизвестная машина"
 if [ "${MACHINE}" == "Неизвестная машина" ]; then echo "Не удалось определить модель принетра"; exit 1; fi
 
 rm -f /tmp/version.txt
-if ! ${CURL} -o "/tmp/version.txt" -L "https://github.com/ghzserg/zmod/releases/download/latest/version.txt"; then echo "Не удалось получить последнюю версию"; exit 1; fi
+if ! ${CURL} -k -s -o "/tmp/version.txt" -L "https://github.com/ghzserg/zmod/releases/download/latest/version.txt"; then echo "Не удалось получить последнюю версию"; exit 1; fi
 
 source /tmp/version.txt
 echo "Скачиваю версию ${ZMOD_VERSION} для принтера ${MACHINE}. Это займет немало времени..."
-
 rm -f "/media/${MACHINE}-zmod-${ZMOD_VERSION}.tgz"
 if ! ${CURL} -k -o "/media/${MACHINE}-zmod-${ZMOD_VERSION}.tgz" -L "https://github.com/ghzserg/zmod/releases/download/latest/${MACHINE}-zmod-${ZMOD_VERSION}.tgz"; then
     rm -f "/media/${MACHINE}-zmod-${ZMOD_VERSION}.tgz"
@@ -43,7 +42,7 @@ sync
 
 rm -f "/media/${MACHINE}.txt"
 echo "Скачиваю контрольную сумму ${ZMOD_VERSION} для принтера ${MACHINE}. Это быстро."
-if ! ${CURL} -k -o "/media/${MACHINE}.txt" -L "https://github.com/ghzserg/zmod/releases/download/latest/${MACHINE}.txt"; then
+if ! ${CURL} -k -s -o "/media/${MACHINE}.txt" -L "https://github.com/ghzserg/zmod/releases/download/latest/${MACHINE}.txt"; then
     rm -f "/media/${MACHINE}-zmod-${ZMOD_VERSION}.tgz"
     rm -f "/media/${MACHINE}.txt"
     echo "Не удалось получить контрольную сумму версии ${ZMOD_VERSION} для принтера ${MACHINE}"
