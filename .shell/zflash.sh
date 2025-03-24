@@ -27,6 +27,7 @@ MACHINE="Неизвестная машина"
 
 if [ "${MACHINE}" == "Неизвестная машина" ]; then echo "Не удалось определить модель принетра"; exit 1; fi
 
+ZMOD_VERSION="0.0.0"
 rm -f /tmp/version.txt
 if ! ${CURL} -k -s -o "/tmp/version.txt" -L "https://github.com/ghzserg/zmod/releases/latest/download/version.txt"; then echo "Не удалось получить последнюю версию"; exit 1; fi
 
