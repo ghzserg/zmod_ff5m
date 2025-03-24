@@ -34,7 +34,7 @@ source /tmp/version.txt
 echo "Скачиваю версию ${ZMOD_VERSION} для принтера ${MACHINE}. Это займет немало времени..."
 
 rm -f "/media/${MACHINE}-zmod-${ZMOD_VERSION}.tgz"
-if ! ${CURL} -o "/media/${MACHINE}-zmod-${ZMOD_VERSION}.tgz" -L "https://github.com/ghzserg/zmod/releases/download/latest/${MACHINE}-zmod-${ZMOD_VERSION}.tgz"; then
+if ! ${CURL} -k -o "/media/${MACHINE}-zmod-${ZMOD_VERSION}.tgz" -L "https://github.com/ghzserg/zmod/releases/download/latest/${MACHINE}-zmod-${ZMOD_VERSION}.tgz"; then
     rm -f "/media/${MACHINE}-zmod-${ZMOD_VERSION}.tgz"
     echo "Не удалось получить версию ${ZMOD_VERSION} для принтера ${MACHINE}"
     exit 1
@@ -43,7 +43,7 @@ sync
 
 rm -f "/media/${MACHINE}.txt"
 echo "Скачиваю контрольную сумму ${ZMOD_VERSION} для принтера ${MACHINE}. Это быстро."
-if ! ${CURL} -o "/media/${MACHINE}.txt" -L "https://github.com/ghzserg/zmod/releases/download/latest/${MACHINE}.txt"; then
+if ! ${CURL} -k -o "/media/${MACHINE}.txt" -L "https://github.com/ghzserg/zmod/releases/download/latest/${MACHINE}.txt"; then
     rm -f "/media/${MACHINE}-zmod-${ZMOD_VERSION}.tgz"
     rm -f "/media/${MACHINE}.txt"
     echo "Не удалось получить контрольную сумму версии ${ZMOD_VERSION} для принтера ${MACHINE}"
