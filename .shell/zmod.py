@@ -1,11 +1,11 @@
 class zmod:
     def __init__(self, config):
         self.printer = config.get_printer()
-        self.language = 'ru'
         gcode = self.printer.lookup_object('gcode')
         gcode.register_command('SAVE_SHAPER', self.cmd_SAVE_SHAPER)
         self.gcode.register_command('SET_ZMOD_LANG_EN', self.cmd_SET_ZMOD_LANG_EN)
         self.gcode.register_command('SET_ZMOD_LANG_RU', self.cmd_SET_ZMOD_LANG_RU)
+        self.language = 'ru'
 
     def get_lang(self):
         return self.language
