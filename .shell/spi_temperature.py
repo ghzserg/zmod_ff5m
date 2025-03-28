@@ -7,7 +7,7 @@
 import math, logging
 from . import bus
 
-# Zcontrol 1.7
+# Zcontrol 1.8
 
 ######################################################################
 # SensorBase
@@ -41,6 +41,10 @@ class SensorBase:
             self.gcode.register_command('ZCONTROL_ABORT', self.cmd_ZCONTROL_ABORT)
             self.gcode.register_command('ZCONTROL_STATUS', self.cmd_ZCONTROL_STATUS)
             self.gcode.register_command('ZCONTROL_OFF', self.cmd_ZCONTROL_OFF)
+            self.zmod = self.printer.lookup_object('zmod', None)
+            self.language = 'ru'
+            if self.zmod is not None:
+                self.language = self.zmod.get_lang()
         mcu.register_response(self._handle_spi_response,
                               "thermocouple_result", oid)
         mcu.register_config_callback(self._build_config)
@@ -56,16 +60,35 @@ class SensorBase:
 
     def cmd_ZCONTROL_STATUS(self, gcmd):
         if self.max_temp == 2048:
-            gcmd.respond_info("Контроль веса не настроен. // Для настройки: NOZZLE_CONTROL WEIGHT=1500")
+            if self.language == 'en':
+                msg = "Weight control is not configured. // To configure: NOZZLE_CONTROL WEIGHT=1500"
+            else:
+                msg = "Контроль веса не настроен. // Для настройки: NOZZLE_CONTROL WEIGHT=1500"
+            gcmd.respond_info(msg)
         else:
             if self.zcontrol == 1:
-                gcmd.respond_info("Вес: %d; Контроль настроен и активен." % (self.max_temp))
+                if self.language == 'en':
+                    status_msg = "Weight: %d; Control is configured and active." % self.max_temp
+                else:
+                    status_msg = "Вес: %d; Контроль настроен и активен." % self.max_temp
             else:
-                gcmd.respond_info("Вес: %d; Контроль настроен и не активен." % (self.max_temp))
+                if self.language == 'en':
+                    status_msg = "Weight: %d; Control is configured but inactive." % self.max_temp
+                else:
+                    status_msg = "Вес: %d; Контроль настроен и не активен." % self.max_temp
+            gcmd.respond_info(status_msg)
+
             if self.zcommand == 1:
-                gcmd.respond_info("При сработке вызывается PAUSE. // ZCONTROL_PAUSE")
+                if self.language == 'en':
+                    action_msg = "PAUSE is triggered when activated. // ZCONTROL_PAUSE"
+                else:
+                    action_msg = "При сработке вызывается PAUSE. // ZCONTROL_PAUSE"
             else:
-                gcmd.respond_info("При сработке отключается Klipper. // ZCONTROL_ABORT")
+                if self.language == 'en':
+                    action_msg = "Klipper is disabled when triggered. // ZCONTROL_ABORT"
+                else:
+                    action_msg = "При сработке отключается Klipper. // ZCONTROL_ABORT"
+            gcmd.respond_info(action_msg)
 
     def cmd_ZCONTROL_OFF(self, gcmd):
         self.zcontrol = 0
@@ -97,9 +120,12 @@ class SensorBase:
             return
         temp = self.calc_temp(params['value'])
         # zmod
-        if temp>self.max_temp and self.zcontrol == 1:
+        if temp > self.max_temp and self.zcontrol == 1:
             if self.zcommand == 1:
-                self.gcode.respond_raw("!! Удар сопла о стол или отрыв детали. PAUSE")
+                msg = ("!! Nozzle hit bed or part detachment. PAUSE"
+                       if self.language == 'en'
+                       else "!! Удар сопла о стол или отрыв детали. PAUSE")
+                self.gcode.respond_raw(msg)
 
                 reactor = self.printer.get_reactor()
                 pause_resume = self.printer.lookup_object('pause_resume')
@@ -110,13 +136,17 @@ class SensorBase:
                     return reactor.NEVER
 
                 reactor.register_callback(async_pause)
-
             else:
-                self.printer.invoke_async_shutdown("Удар сопла о стол или отрыв детали. FIRMWARE_RESTART")
+                shutdown_msg = (
+                    "Nozzle hit bed or part detachment. FIRMWARE_RESTART"
+                    if self.language == 'en'
+                    else "Удар сопла о стол или отрыв детали. FIRMWARE_RESTART"
+                )
+                self.printer.invoke_async_shutdown(shutdown_msg)
             return
-        next_clock      = self.mcu.clock32_to_clock64(params['next_clock'])
+        next_clock = self.mcu.clock32_to_clock64(params['next_clock'])
         last_read_clock = next_clock - self._report_clock
-        last_read_time  = self.mcu.clock_to_print_time(last_read_clock)
+        last_read_time = self.mcu.clock_to_print_time(last_read_clock)
         self._callback(last_read_time, temp)
     def report_fault(self, msg):
         logging.warn(msg)
