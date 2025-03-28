@@ -10,7 +10,7 @@ PRINTER_DATA_TMP=/root/printer_data/tmp
 PID_FILE=/run/moonraker.pid
 
 FNAME="/opt/config/mod/fluidd.sql"
-grep -q "lang = en" /opt/config/mod_data/variables.cfg && FNAME="/opt/config/mod/fluidd_en.sql"
+grep -q "lang = 'en'" /opt/config/mod_data/variables.cfg && FNAME="/opt/config/mod/fluidd_en.sql"
 
 start() {
     NEED="N"
