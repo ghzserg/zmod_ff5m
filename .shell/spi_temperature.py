@@ -7,7 +7,7 @@
 import math, logging
 from . import bus
 
-# Zcontrol 1.9
+# Zcontrol 1.10
 
 ######################################################################
 # SensorBase
@@ -49,7 +49,7 @@ class SensorBase:
                               "thermocouple_result", oid)
         mcu.register_config_callback(self._build_config)
 
-    def get_lang(self):
+    def getlang(self):
         if self.zmod is None:
             self.language = 'ru'
             self.zmod = self.printer.lookup_object('zmod', None)
