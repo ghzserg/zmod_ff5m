@@ -130,7 +130,7 @@ def plot_freq_response(lognames, calibration_data, shapers,
     ax2 = ax.twinx()
     if current_language == 'en':
         ax2.set_ylabel('Shaper vibration reduction (coefficient)')
-    else
+    else:
         ax2.set_ylabel('Снижение вибрации шейпером (коэффициент)')
     best_shaper_vals = None
     for shaper in shapers:
@@ -159,7 +159,7 @@ def plot_freq_response(lognames, calibration_data, shapers,
     if current_language == 'en':
         ax2.plot([], [], ' ',
              label="Рекомендуемый шейпер: %s" % (selected_shaper.upper()))
-    else
+    else:
         ax2.plot([], [], ' ',
              label="Recommended shaper: %s" % (selected_shaper.upper()))
     ax.legend(loc='upper left', prop=fontP)
