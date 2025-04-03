@@ -7,7 +7,7 @@
 import math, logging
 from . import bus
 
-# Zcontrol 1.11
+# Zcontrol 1.12
 
 ######################################################################
 # SensorBase
@@ -134,9 +134,9 @@ class SensorBase:
         # zmod
         if temp > self.max_temp and self.zcontrol == 1:
             if self.zcommand == 1:
-                msg = (f"!! Nozzle hit bed or part detachment. Weight {temp}. PAUSE"
+                msg = (f"!! Nozzle hit bed or part detachment. Weight {temp}. PAUSE. https://github.com/ghzserg/zmod/wiki/Macros_en#nozzle_control"
                        if self.language == 'en'
-                       else f"!! Удар сопла о стол или отрыв детали. Вес {temp}. PAUSE")
+                       else f"!! Удар сопла о стол или отрыв детали. Вес {temp}. PAUSE. https://github.com/ghzserg/zmod/wiki/Macros#nozzle_control")
                 self.gcode.respond_raw(msg)
 
                 reactor = self.printer.get_reactor()
@@ -150,9 +150,9 @@ class SensorBase:
                 reactor.register_callback(async_pause)
             else:
                 shutdown_msg = (
-                    f"Nozzle hit bed or part detachment. Weight {temp}. FIRMWARE_RESTART"
+                    f"Nozzle hit bed or part detachment. Weight {temp}. FIRMWARE_RESTART. https://github.com/ghzserg/zmod/wiki/Macros_en#nozzle_control"
                     if self.language == 'en'
-                    else f"Удар сопла о стол или отрыв детали. Вес {temp}. FIRMWARE_RESTART"
+                    else f"Удар сопла о стол или отрыв детали. Вес {temp}. FIRMWARE_RESTART. https://github.com/ghzserg/zmod/wiki/Macros#nozzle_control"
                 )
                 self.printer.invoke_async_shutdown(shutdown_msg)
             return
