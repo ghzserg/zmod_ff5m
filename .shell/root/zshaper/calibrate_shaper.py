@@ -44,7 +44,7 @@ def parse_log(logname):
 # Find the best shaper parameters
 def calibrate_shaper(datas, csv_output, *, shapers, damping_ratio, scv,
                      shaper_freqs, max_smoothing, test_damping_ratios,
-                     max_freq, resp_json, current_language, send_klipper):
+                     max_freq, resp_json, send_klipper):
     helper = shaper_calibrate.ShaperCalibrate(printer=None)
     if isinstance(datas[0], shaper_calibrate.CalibrationData):
         calibration_data = datas[0]
@@ -284,7 +284,7 @@ def main():
             scv=options.scv, shaper_freqs=shaper_freqs,
             max_smoothing=options.max_smoothing,
             test_damping_ratios=test_damping_ratios,
-            max_freq=max_freq, resp_json=options.resp_json, current_language=current_language, send_klipper=options.send_klipper)
+            max_freq=max_freq, resp_json=options.resp_json, send_klipper=options.send_klipper)
     if selected_shaper is None:
         return
 
