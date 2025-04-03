@@ -159,10 +159,10 @@ def plot_freq_response(lognames, calibration_data, shapers,
     # A hack to add a human-readable shaper recommendation to legend
     if current_language == 'en':
         ax2.plot([], [], ' ',
-             label="Рекомендуемый шейпер: %s" % (selected_shaper.upper()))
+             label="Recommended shaper: %s" % (selected_shaper.upper()))
     else:
         ax2.plot([], [], ' ',
-             label="Recommended shaper: %s" % (selected_shaper.upper()))
+             label="Рекомендуемый шейпер: %s" % (selected_shaper.upper()))
     ax.legend(loc='upper left', prop=fontP)
     ax2.legend(loc='upper right', prop=fontP)
 
