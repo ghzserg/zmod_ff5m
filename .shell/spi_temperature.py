@@ -7,7 +7,7 @@
 import math, logging
 from . import bus
 
-# Zcontrol 1.13
+# Zcontrol 1.14
 
 ######################################################################
 # SensorBase
@@ -71,31 +71,31 @@ class SensorBase:
     def cmd_ZCONTROL_STATUS(self, gcmd):
         self.getlang()
         if self.max_temp == 2048:
-            if self.language == 'en':
+            if self.language != 'ru':
                 msg = "Weight control is not configured. // To configure: NOZZLE_CONTROL WEIGHT=1500"
             else:
                 msg = "Контроль веса не настроен. // Для настройки: NOZZLE_CONTROL WEIGHT=1500"
             gcmd.respond_info(msg)
         else:
             if self.zcontrol == 1:
-                if self.language == 'en':
+                if self.language != 'ru':
                     status_msg = "Weight: %d; Control is configured and active." % self.max_temp
                 else:
                     status_msg = "Вес: %d; Контроль настроен и активен." % self.max_temp
             else:
-                if self.language == 'en':
+                if self.language != 'ru':
                     status_msg = "Weight: %d; Control is configured but inactive." % self.max_temp
                 else:
                     status_msg = "Вес: %d; Контроль настроен и не активен." % self.max_temp
             gcmd.respond_info(status_msg)
 
             if self.zcommand == 1:
-                if self.language == 'en':
+                if self.language != 'ru':
                     action_msg = "PAUSE is triggered when activated. // ZCONTROL_PAUSE"
                 else:
                     action_msg = "При сработке вызывается PAUSE. // ZCONTROL_PAUSE"
             else:
-                if self.language == 'en':
+                if self.language != 'ru':
                     action_msg = "Klipper is disabled when triggered. // ZCONTROL_ABORT"
                 else:
                     action_msg = "При сработке отключается Klipper. // ZCONTROL_ABORT"
@@ -135,7 +135,7 @@ class SensorBase:
         if temp > self.max_temp and self.zcontrol == 1:
             if self.zcommand == 1:
                 msg = (f"!! Nozzle hit bed or part detachment. Weight {temp}. PAUSE. https://github.com/ghzserg/zmod/wiki/Macros_en#nozzle_control"
-                       if self.language == 'en'
+                       if self.language != 'ru'
                        else f"!! Удар сопла о стол или отрыв детали. Вес {temp}. PAUSE. https://github.com/ghzserg/zmod/wiki/Macros#nozzle_control")
                 self.gcode.respond_raw(msg)
 
@@ -151,7 +151,7 @@ class SensorBase:
             else:
                 shutdown_msg = (
                     f"Nozzle hit bed or part detachment. Weight {temp}. FIRMWARE_RESTART. https://github.com/ghzserg/zmod/wiki/Macros_en#nozzle_control"
-                    if self.language == 'en'
+                    if self.language != 'ru'
                     else f"Удар сопла о стол или отрыв детали. Вес {temp}. FIRMWARE_RESTART. https://github.com/ghzserg/zmod/wiki/Macros#nozzle_control"
                 )
                 self.printer.invoke_async_shutdown(shutdown_msg)
