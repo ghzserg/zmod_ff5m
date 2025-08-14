@@ -16,8 +16,13 @@ if grep -q "fix_scv = 1" /opt/config/mod_data/variables.cfg; then
     fi
 fi
 
-if [ $SCV -ge 11 ]; then
-    [ ${ZLANG} != 'ru' ] && echo "!! SCV($SCV) too high detected // https://github.com/ghzserg/zmod/wiki/Global_en#fix_scv !!" || echo "!! Обнаружен завышенный SCV($SCV) // https://github.com/ghzserg/zmod/wiki/Global_ru#fix_scv !!"
+SCV_INT="${SCV%%.*}"
+if [ "$SCV_INT" -ge 11 ]; then
+    if [ "${ZLANG}" != 'ru' ]; then
+        echo "!! SCV($SCV) too high detected // https://github.com/ghzserg/zmod/wiki/Global_en#fix_scv !!"
+    else
+        echo "!! Обнаружен завышенный SCV($SCV) // https://github.com/ghzserg/zmod/wiki/Global_ru#fix_scv !!"
+    fi
 fi
 
 DT=$(date '+%Y%m%d_%H%M')

@@ -5,6 +5,10 @@ if ! mount |grep media >/dev/null; then
     exit 1
 fi
 
+if [ -f /ZMOD ]; then
+    /opt/config/mod/.shell/zremote.sh /opt/config/mod/.shell/zflash.sh
+    exit 0
+fi
 source /opt/config/mod/.shell/0.sh
 
 if [ ${FF5X} -eq 1 ]; then
