@@ -355,7 +355,7 @@ unset LD_PRELOAD
     grep -q "zmod 1.1" ${KLIPPER_DIR}/klippy/webhooks.py || cp ${MOD_CONF}/mod/.shell/webhooks.py ${KLIPPER_DIR}/klippy/webhooks.py
     grep -q ZLOAD_VARIABLE ${KLIPPER_DIR}/klippy/extras/save_variables.py || cp ${MOD_CONF}/mod/.shell/save_variables.py ${KLIPPER_DIR}/klippy/extras/save_variables.py
     if [ ${FF5X} -eq 0 ]; then
-        if ! grep -q "Zcontrol 1.17" ${KLIPPER_DIR}/klippy/extras/spi_temperature.py; then
+        if ! grep -q "Zcontrol 1.18" ${KLIPPER_DIR}/klippy/extras/spi_temperature.py; then
             cp ${MOD_CONF}/mod/.shell/spi_temperature.py ${KLIPPER_DIR}/klippy/extras/spi_temperature.py
         fi
         if ! grep -q "zmod 1.0" /opt/klipper/start.sh; then

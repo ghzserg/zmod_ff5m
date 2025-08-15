@@ -7,7 +7,7 @@
 import math, logging
 from . import bus
 
-# Zcontrol 1.17
+# Zcontrol 1.18
 
 ######################################################################
 # SensorBase
@@ -140,9 +140,9 @@ class SensorBase:
         # zmod
         if temp > self.max_temp and self.zcontrol == 1:
             if self.zcommand == 1:
-                msg = (f"!! Nozzle hit bed or part detachment. Weight {temp}. PAUSE. https://github.com/ghzserg/zmod/wiki/Global_en#nozzle_control"
+                msg = (f"!! Nozzle hit bed or part detachment. Weight {temp}>{self.max_temp}. PAUSE. https://github.com/ghzserg/zmod/wiki/Global_en#nozzle_control"
                        if self.language != 'ru'
-                       else f"!! Удар сопла о стол или отрыв детали. Вес {temp}. PAUSE. https://github.com/ghzserg/zmod/wiki/Global_ru#nozzle_control")
+                       else f"!! Удар сопла о стол или отрыв детали. Вес {temp}>{self.max_temp}. PAUSE. https://github.com/ghzserg/zmod/wiki/Global_ru#nozzle_control")
                 self.gcode.respond_raw(msg)
 
                 reactor = self.printer.get_reactor()
@@ -156,9 +156,9 @@ class SensorBase:
                 reactor.register_callback(async_pause)
             else:
                 shutdown_msg = (
-                    f"Nozzle hit bed or part detachment. Weight {temp}. FIRMWARE_RESTART. https://github.com/ghzserg/zmod/wiki/Global_en#nozzle_control"
+                    f"Nozzle hit bed or part detachment. Weight {temp}>{self.max_temp}. FIRMWARE_RESTART. https://github.com/ghzserg/zmod/wiki/Global_en#nozzle_control"
                     if self.language != 'ru'
-                    else f"Удар сопла о стол или отрыв детали. Вес {temp}. FIRMWARE_RESTART. https://github.com/ghzserg/zmod/wiki/Global_ru#nozzle_control"
+                    else f"Удар сопла о стол или отрыв детали. Вес {temp}>{self.max_temp}. FIRMWARE_RESTART. https://github.com/ghzserg/zmod/wiki/Global_ru#nozzle_control"
                 )
                 self.printer.invoke_async_shutdown(shutdown_msg)
             return
