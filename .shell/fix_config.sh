@@ -373,24 +373,6 @@ unset LD_PRELOAD
     if [ ${FF5X} -eq 0 ]; then
         # Fix possible ordering issue if a callback blocks in button handler#6440
         grep -q receive_time ${KLIPPER_DIR}/klippy/extras/buttons.py || cp /opt/config/mod/.shell/buttons.py ${KLIPPER_DIR}/klippy/extras/buttons.py
-        if awk '
-            /\[include \.\/mod_data\/user\.cfg\]/ { user_found = 1 }
-            user_found && (/\[include \.\/mod\/klipper11\.cfg\]/ || /\[include \.\/mod\/klipper13\.cfg\]/) {
-                found = 1
-                exit
-            }
-            END { exit !found }' ${PRINTER_CFG}; then
-                sed -i '\|\[include \./mod/klipper11\.cfg\]|d' "$FILE"
-                sed -i '\|\[include \./mod/klipper13\.cfg\]|d' "$FILE"
-                NEED_REBOOT=1
-        fi
-        if grep -q "klipper13 = 1" ${MOD_CONF}/mod_data/variables.cfg; then
-            grep -q '^\[include ./mod/klipper13.cfg\]' ${PRINTER_CFG} || sed -i '/\[include \.\/mod_data\/user\.cfg\]/i [include ./mod/klipper13.cfg]' ${PRINTER_CFG} && NEED_REBOOT=1
-            grep -q '^\[include ./mod/klipper11.cfg\]' ${PRINTER_CFG} && sed -i '/^\[include \.\/mod\/klipper11\.cfg\]$/d' ${PRINTER_CFG} && NEED_REBOOT=1
-        else
-            grep -q '^\[include ./mod/klipper11.cfg\]' ${PRINTER_CFG} || sed -i '/\[include \.\/mod_data\/user\.cfg\]/i [include ./mod/klipper11.cfg]' ${PRINTER_CFG} && NEED_REBOOT=1
-            grep -q '^\[include ./mod/klipper13.cfg\]' ${PRINTER_CFG} && sed -i '/^\[include \.\/mod\/klipper13\.cfg\]$/d' ${PRINTER_CFG} && NEED_REBOOT=1
-        fi
     fi
 
     grep -q zmod_1.0 ${KLIPPER_DIR}/klippy/extras/gcode_shell_command.py || cp ${MOD_CONF}/mod/.shell/gcode_shell_command.py ${KLIPPER_DIR}/klippy/extras/gcode_shell_command.py
@@ -413,6 +395,12 @@ unset LD_PRELOAD
 
     cnt=$(grep '^\[include ./mod/mod.cfg\]' ${PRINTER_CFG} |wc -l)
     [ "$cnt" -gt 1 ] && sed -i '/^\[include .\/mod\/mod.cfg\]/d' ${PRINTER_CFG} && NEED_REBOOT=1
+
+    cnt=$(grep '^\[include ./mod/klipper13.cfg\]' ${PRINTER_CFG} |wc -l)
+    [ "$cnt" -gt 1 ] && sed -i '/^\[include .\/mod\/klipper13.cfg\]/d' ${PRINTER_CFG} && NEED_REBOOT=1
+
+    cnt=$(grep '^\[include ./mod/klipper11.cfg\]' ${PRINTER_CFG} |wc -l)
+    [ "$cnt" -gt 1 ] && sed -i '/^\[include .\/mod\/klipper11.cfg\]/d' ${PRINTER_CFG} && NEED_REBOOT=1
 
     ! grep -q '^\[include ./mod/mod.cfg\]' ${PRINTER_CFG} && ! grep -q '^\[include ./mod/display_off.cfg\]' ${PRINTER_CFG} && sed -i '2 i\[include ./mod/mod.cfg]' ${PRINTER_CFG} && NEED_REBOOT=1
 
@@ -686,6 +674,19 @@ stepper: stepper_x, stepper_y, stepper_z
     fi
 
     if [ ${FF5X} -eq 0 ]; then
+        if ! { head -n 2 ${PRINTER_CFG} | tail -n 1 | grep -qE '^\[include \.\/mod\/klipper1[13]\.cfg\]$'; }; then
+            sed -i '\|\[include \./mod/klipper11\.cfg\]|d' "${PRINTER_CFG}"
+            sed -i '\|\[include \./mod/klipper13\.cfg\]|d' "${PRINTER_CFG}"
+            NEED_REBOOT=1
+        fi
+        if grep -q "klipper13 = 1" ${MOD_CONF}/mod_data/variables.cfg; then
+            grep -q '^\[include ./mod/klipper13.cfg\]' ${PRINTER_CFG} || sed -i '/\[include printer\.base\.cfg\]/a [include ./mod/klipper13.cfg]' ${PRINTER_CFG} && NEED_REBOOT=1
+            grep -q '^\[include ./mod/klipper11.cfg\]' ${PRINTER_CFG} && sed -i '/^\[include \.\/mod\/klipper11\.cfg\]$/d' ${PRINTER_CFG} && NEED_REBOOT=1
+        else
+            grep -q '^\[include ./mod/klipper11.cfg\]' ${PRINTER_CFG} || sed -i '/\[include printer\.base\.cfg\]/a [include ./mod/klipper11.cfg]' ${PRINTER_CFG} && NEED_REBOOT=1
+            grep -q '^\[include ./mod/klipper13.cfg\]' ${PRINTER_CFG} && sed -i '/^\[include \.\/mod\/klipper13\.cfg\]$/d' ${PRINTER_CFG} && NEED_REBOOT=1
+        fi
+
         ! grep -q "motion_sensor" ${MOD_CONF}/mod_data/variables.cfg && sed -i '2 i\motion_sensor = 0' ${MOD_CONF}/mod_data/variables.cfg
 
         # Режим с экраном
