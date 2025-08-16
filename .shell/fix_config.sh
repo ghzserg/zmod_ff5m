@@ -373,11 +373,22 @@ unset LD_PRELOAD
     if [ ${FF5X} -eq 0 ]; then
         # Fix possible ordering issue if a callback blocks in button handler#6440
         grep -q receive_time ${KLIPPER_DIR}/klippy/extras/buttons.py || cp /opt/config/mod/.shell/buttons.py ${KLIPPER_DIR}/klippy/extras/buttons.py
+        if awk '
+            /\[include \.\/mod_data\/user\.cfg\]/ { user_found = 1 }
+            user_found && (/\[include \.\/mod\/klipper11\.cfg\]/ || /\[include \.\/mod\/klipper13\.cfg\]/) {
+                found = 1
+                exit
+            }
+            END { exit !found }' ${PRINTER_CFG}; then
+                sed -i '\|\[include \./mod/klipper11\.cfg\]|d' "$FILE"
+                sed -i '\|\[include \./mod/klipper13\.cfg\]|d' "$FILE"
+                NEED_REBOOT=1
+        fi
         if grep -q "klipper13 = 1" ${MOD_CONF}/mod_data/variables.cfg; then
-            grep -q '^\[include ./mod/klipper13.cfg\]' ${PRINTER_CFG} || sed -i '2 i\[include ./mod/klipper13.cfg]' ${PRINTER_CFG} && NEED_REBOOT=1
+            grep -q '^\[include ./mod/klipper13.cfg\]' ${PRINTER_CFG} || sed -i '/\[include \.\/mod_data\/user\.cfg\]/i [include ./mod/klipper13.cfg]' ${PRINTER_CFG} && NEED_REBOOT=1
             grep -q '^\[include ./mod/klipper11.cfg\]' ${PRINTER_CFG} && sed -i '/^\[include \.\/mod\/klipper11\.cfg\]$/d' ${PRINTER_CFG} && NEED_REBOOT=1
         else
-            grep -q '^\[include ./mod/klipper11.cfg\]' ${PRINTER_CFG} || sed -i '2 i\[include ./mod/klipper11.cfg]' ${PRINTER_CFG} && NEED_REBOOT=1
+            grep -q '^\[include ./mod/klipper11.cfg\]' ${PRINTER_CFG} || sed -i '/\[include \.\/mod_data\/user\.cfg\]/i [include ./mod/klipper11.cfg]' ${PRINTER_CFG} && NEED_REBOOT=1
             grep -q '^\[include ./mod/klipper13.cfg\]' ${PRINTER_CFG} && sed -i '/^\[include \.\/mod\/klipper13\.cfg\]$/d' ${PRINTER_CFG} && NEED_REBOOT=1
         fi
     fi
