@@ -12,6 +12,35 @@ else if [ -f /usr/data/config/mod/.shell/0.sh ]; then
 fi
 fi
 
+wifi_fix()
+{
+    mv ${MOD_CONF}/mod_data/log/wifi.4.log ${MOD_CONF}/mod_data/log/wifi.5.log
+    mv ${MOD_CONF}/mod_data/log/wifi.3.log ${MOD_CONF}/mod_data/log/wifi.4.log
+    mv ${MOD_CONF}/mod_data/log/wifi.2.log ${MOD_CONF}/mod_data/log/wifi.3.log
+    mv ${MOD_CONF}/mod_data/log/wifi.1.log ${MOD_CONF}/mod_data/log/wifi.2.log
+    mv ${MOD_CONF}/mod_data/log/wifi.log ${MOD_CONF}/mod_data/log/wifi.1.log
+    >${MOD_CONF}/mod_data/log/wifi.log
+
+    if [ ! -f "$FFCONFIG" ]; then
+        echo "Config file not found: $FFCONFIG" >> ${MOD_CONF}/mod_data/log/wifi.log
+        return 0
+    fi
+
+    if ! grep -q '"wifiStationStatus" *: *true' "$FFCONFIG"; then
+        echo "WiFi station disabled — skipping network restart." >> ${MOD_CONF}/mod_data/log/wifi.log
+        return 0
+    fi
+
+    echo "WiFi station enabled — restarting network..." >> ${MOD_CONF}/mod_data/log/wifi.log
+
+    killall wpa_supplicant 2>/dev/null || true >> ${MOD_CONF}/mod_data/log/wifi.log
+    killall wpa_cli       2>/dev/null || true >> ${MOD_CONF}/mod_data/log/wifi.log
+
+    wpa_supplicant -d -Dnl80211 -iwlan0 -c/etc/wpa_supplicant.conf -B >> ${MOD_CONF}/mod_data/log/wifi.log
+    start-stop-daemon --start --background --exec /usr/bin/wpa_cli -- -i wlan0 -a ${MOD_CONF}/mod/.shell/wifi.sh >> ${MOD_CONF}/mod_data/log/wifi.log
+    echo "Wi-Fi restart initiated. DHCP will start automatically on connection." >> ${MOD_CONF}/mod_data/log/wifi.log
+}
+
 remove_base()
 {
     rm -rf ${UMOUNT_MOD}
