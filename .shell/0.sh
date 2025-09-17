@@ -20,10 +20,7 @@ PROGRAM_DIR="/opt/PROGRAM/"
 GLINES=1100
 UPDATE_DIR=/data/update/
 FFCONFIG='/opt/config/Adventurer5M.json'
-<<<<<<< HEAD
 WPA_CONFIG="/etc/wpa_supplicant.conf"
-=======
->>>>>>> 2272a9e5b2479e3e738c17c0d390385425bd8d1e
 ZLANG="en"
 if grep -q "language: en" ${MOD_CONF}/mod_data/lang.cfg; then ZLANG="en";
 else if grep -q "language: ru" ${MOD_CONF}/mod_data/lang.cfg; then ZLANG="ru";
