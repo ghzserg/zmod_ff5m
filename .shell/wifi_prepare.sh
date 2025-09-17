@@ -25,10 +25,10 @@ wifi_fix()
         return 0
     fi
 
-    if ! grep -q '"wifiStationStatus" *: *true' "$FFCONFIG"; then
-        echo "WiFi station disabled — skipping network restart."
-        return 0
-    fi
+#    if ! grep -q '"wifiStationStatus" *: *true' "$FFCONFIG"; then
+#        echo "WiFi station disabled — skipping network restart."
+#        return 0
+#    fi
 
     echo "WiFi station enabled — restarting network..."
 
@@ -40,6 +40,9 @@ wifi_fix()
     killall wpa_supplicant 2>/dev/null || true
     killall wpa_cli        2>/dev/null || true
     killall udhcpc         2>/dev/null || true
+
+    sleep 1
+    rm -f /var/run/wpa_supplicant/wlan0
 
     echo "wpa_supplicant"
     wpa_supplicant -i$INTERFACE -B -d -Dnl80211 -c${WPA_CONFIG}
@@ -53,9 +56,10 @@ wifi_fix()
     echo "Enabling all networks..."
     wpa_cli -i "$INTERFACE" enable_network all
 
-    killall wpa_cli 2>/dev/null || true
+    killall wpa_cli
+    killall -9 wpa_cli
 
-    start-stop-daemon --start --background --exec /usr/sbin/wpa_cli -- -i wlan0 -a ${MOD_CONF}/mod/.shell/wifi.sh
+    start-stop-daemon --start --background --exec /usr/sbin/wpa_cli -- -i $INTERFACE -a ${WIFI_RECONNECT}
     echo "Wi-Fi restart initiated. DHCP will start automatically on connection."
 }
 
