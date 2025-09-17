@@ -33,7 +33,7 @@ wifi_fix()
     echo "wpa_supplicant"
     wpa_supplicant -d -Dnl80211 -iwlan0 -c${WPA_CONFIG} -B
     echo "/usr/bin/wpa_cli"
-    start-stop-daemon --start --background --exec /usr/bin/wpa_cli -- -i wlan0 -a ${MOD_CONF}/mod/.shell/wifi.sh
+    start-stop-daemon --start --background --exec /usr/sbin/wpa_cli -- -i wlan0 -a ${MOD_CONF}/mod/.shell/wifi.sh
     echo "Wi-Fi restart initiated. DHCP will start automatically on connection."
 }
 
