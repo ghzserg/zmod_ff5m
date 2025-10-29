@@ -13,8 +13,14 @@ fi
 [ $1 = "off" ]  && sed -i 's|\[include ./mod/mod.cfg\]|\[include ./mod/display_off.cfg\]|' /opt/config/printer.cfg && sync && killall firmwareExe && xzcat /opt/config/mod/.shell/screen_off.raw.xz > /dev/fb0 #&& echo /sbin/mdev >/proc/sys/kernel/hotplug
 [ $1 = "guppy" ]  && sed -i 's|\[include ./mod/mod.cfg\]|\[include ./mod/display_off.cfg\]|' /opt/config/printer.cfg && sync && killall firmwareExe && /opt/config/mod/.shell/zguppy.sh up #&& echo /sbin/mdev >/proc/sys/kernel/hotplug
 
+source /opt/config/mod/.shell/0.sh
+
 if [ $1 = "off" ] || [ $1 = "guppy" ]; then
     echo '/opt/config/mod/.shell/automount.sh' > /proc/sys/kernel/hotplug
+
+    grep -q '"wifiStationStatus" : true' "$FFCONFIG" && sed -i 's/"wifiStationStatus" : true/"wifiStationStatus" : false/' "$FFCONFIG"
+else
+    grep -q '"wifiStationStatus" : false' "$FFCONFIG" && sed -i 's/"wifiStationStatus" : false/"wifiStationStatus" : true/' "$FFCONFIG"
 fi
 
 sync
