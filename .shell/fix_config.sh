@@ -50,7 +50,7 @@ restore_base()
     #logo
     if [ ${FF5X} -eq 0 ]; then
         mount /dev/mmcblk0p1 /lost+found
-        [ -f /lost+found/bootlogo.bmp.save ] && mv /lost+found/bootlogo.bmp.save /lost+found/bootlogo.bmp
+        [ -f /lost+found/bootlogo.bmp.save ] && cp /lost+found/bootlogo.bmp.save /lost+found/bootlogo.bmp && rm -f /lost+found/bootlogo.bmp.save
         umount /lost+found
     else
         [ -f /usr/prog/logo.jpeg ] && rm -f /usr/prog/logo.jpeg
@@ -245,7 +245,6 @@ fix_config()
         [ "${current_logo}" != "${mod_data_logo}" ] && cp ${MOD_CONF}/mod_data/logo/logo.jpeg /usr/prog/logo.jpeg
     else
         if ! [ -f ${MOD_CONF}/mod_data/logo/bootlogo.bmp ]; then
-            [ -f /lost+found/bootlogo.bmp.save ] && cp /lost+found/bootlogo.bmp /lost+found/bootlogo.bmp.save
             mkdir -p ${MOD_CONF}/mod_data/logo/
             cp ${MOD_CONF}/mod/.shell/logo/bootlogo.bmp ${MOD_CONF}/mod_data/logo/
         fi
