@@ -50,7 +50,7 @@ restore_base()
     #logo
     if [ ${FF5X} -eq 0 ]; then
         mount /dev/mmcblk0p1 /lost+found
-        [ -f /lost+found/bootlogo.bmp.save ] && cp /lost+found/bootlogo.bmp.save /lost+found/bootlogo.bmp && rm -f /lost+found/bootlogo.bmp.save
+        [ -f /lost+found/boot.bmp ] && cp /lost+found/boot.bmp /lost+found/bootlogo.bmp && rm -f /lost+found/boot.bmp
         umount /lost+found
     else
         [ -f /usr/prog/logo.jpeg ] && rm -f /usr/prog/logo.jpeg
@@ -251,11 +251,11 @@ fix_config()
 
         mount /dev/mmcblk0p1 /lost+found
 
-        [ -f /lost+found/bootlogo.bmp.save ] || cp /lost+found/bootlogo.bmp /lost+found/bootlogo.bmp.save
-        logo_save=$(md5sum /lost+found/bootlogo.bmp.save| awk '{print $1}')
+        [ -f /lost+found/boot.bmp ] || cp /lost+found/bootlogo.bmp /lost+found/boot.bmp
+        logo_save=$(md5sum /lost+found/boot.bmp| awk '{print $1}')
         if [ "$logo_save" != "a927ccad137533d0c239b03a20815e56" ]; then
-            mod_data_logo_save=$(md5sum "${MOD_CONF}/mod_data/logo/bootlogo.bmp.save"| awk '{print $1}')
-            [ "$mod_data_logo_save" == "a927ccad137533d0c239b03a20815e56" ] && cp "${MOD_CONF}/mod_data/logo/bootlogo.bmp.save" /lost+found/bootlogo.bmp.save
+            mod_data_logo_save=$(md5sum "${MOD_CONF}/mod_data/logo/boot.bmp"| awk '{print $1}')
+            [ "$mod_data_logo_save" == "a927ccad137533d0c239b03a20815e56" ] && cp "${MOD_CONF}/mod_data/logo/boot.bmp" /lost+found/boot.bmp
         fi
 
         current_logo=$(md5sum /lost+found/bootlogo.bmp| awk '{print $1}')
