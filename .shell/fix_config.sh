@@ -492,32 +492,6 @@ unset LD_PRELOAD
     print $0;
 }' ${PRINTER_CFG} > ${PRINTER_CFG}.tmp && mv ${PRINTER_CFG}.tmp ${PRINTER_CFG} && NEED_REBOOT=1
 
-    # Добавляем в конец файла
-    MARKER='#*# <---------------------- SAVE_CONFIG -------------------->'
-    INC1='[include ./mod_data/plugins.cfg]'
-    INC2='[include ./mod_data/user.cfg]'
-
-    if grep -qF "$MARKER" "${PRINTER_CFG}"; then
-        if ! awk -v inc1="$INC1" -v inc2="$INC2" -v mark="$MARKER" '
-            $0 == inc1 { s=1; next }
-            s==1 && $0 == inc2 { s=2; next }
-            s==2 && $0 == mark { f=1 }
-            { s=0 }
-            END { exit !f }
-        ' "${PRINTER_CFG}"; then
-            awk -v inc1="$INC1" -v inc2="$INC2" -v mark="$MARKER" '
-            { a[NR]=$0 }
-            END {
-                for (i=1; i<=NR; i++) if (a[i]==mark) { m=i; break }
-                for (i=1; i<m; i++) print a[i]
-                print inc1
-                print inc2
-                for (i=m; i<=NR; i++) print a[i]
-            }
-            ' "${PRINTER_CFG}" > "${PRINTER_CFG}.tmp" && mv "${PRINTER_CFG}.tmp" "${PRINTER_CFG}" && NEED_REBOOT=1
-        fi
-    fi
-
     # Восстанавливаем настройки
     if grep -q "display_off = 1" ${MOD_CONF}/mod_data/variables.cfg; then
         grep -q '^\[include ./mod_data/mod.cfg\]' ${PRINTER_CFG} && sed -i 's|\[include ./mod/mod.cfg\]|\[include ./mod/display_off.cfg\]|' ${PRINTER_CFG} && NEED_REBOOT=1
