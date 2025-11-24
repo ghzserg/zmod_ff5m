@@ -20,7 +20,7 @@ start_zlink()
 [ -f "${CONF}" ] || echo "0" >"${CONF}"
 
 if [ "$1" == "get" ]; then
-    cat /opt/config/mod_data/ssh.pub.txt
+    cat /opt/config/mod_data/ssh.pub.txt | cut -d " " -f 1,2
     exit 0
 fi
 
@@ -44,6 +44,7 @@ fi
 
 if [ "$1" == "start" ]; then
     start_zlink
+    exit 0
 fi
 
 echo "Error. Bad run"
