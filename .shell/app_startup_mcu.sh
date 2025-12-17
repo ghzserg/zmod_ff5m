@@ -29,6 +29,11 @@ app_startup_mcu()
             # Если обновляем MCU
             find ${PROGRAM_DIR}control/ -name Update| sed 's/Update//'| while read a; do
                 mount -o bind ${MOD_CONF}/mod/.shell/update_mcu.sh ${a}run.sh
+                if [ ${FF5X} -eq 1 ]; then
+                    cd "${a}"
+                    ./run.sh
+                    reboot -f
+                fi
             done
         else
             # Если обновлений нет
