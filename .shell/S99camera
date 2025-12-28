@@ -27,12 +27,12 @@ start_mjpg_streamer() {
 
     ${V4l2} -d /dev/$VIDEO --set-fmt-video=width=${WIDTH},height=${HEIGHT},pixelformat=MJPG > ${MOD_CONF}/mod_data/log/cam/mjpg_streamer.log
     if [ -f /ZMOD ]; then
-        nohup /usr/bin/mjpg_streamer -o "/usr/lib/mjpg-streamer/output_http.so -w /usr/share/mjpg-streamer/www -p 8080" -i  "/usr/lib/mjpg-streamer/input_uvc.so -b 1 -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS $FFS" 2>&1 >>${MOD_CONF}/mod_data/log/cam/mjpg_streamer.log &
+        nohup /usr/bin/mjpg_streamer -o "/usr/lib/mjpg-streamer/output_http.so -w /usr/share/mjpg-streamer/www -p 8080" -i  "/usr/lib/mjpg-streamer/input_uvc.so -b 1 -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS $FFS" >>${MOD_CONF}/mod_data/log/cam/mjpg_streamer.log 2>&1 &
     else
         if [ ${FF5X} -eq 0 ]; then
-            nohup /opt/config/mod/.shell/eabi/mjpg_streamer -o "/opt/config/mod/.shell/eabi/lib/output_http.so -w /opt/mjpg-streamer/www -p 8080" -i  "/opt/config/mod/.shell/eabi/lib/input_uvc.so -b 1 -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS $FFS" 2>&1 >>${MOD_CONF}/mod_data/log/cam/mjpg_streamer.log &
+            nohup /opt/config/mod/.shell/eabi/mjpg_streamer -o "/opt/config/mod/.shell/eabi/lib/output_http.so -w /opt/mjpg-streamer/www -p 8080" -i  "/opt/config/mod/.shell/eabi/lib/input_uvc.so -b 1 -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS $FFS" >>${MOD_CONF}/mod_data/log/cam/mjpg_streamer.log 2>&1 &
         else
-            chroot $MOD nohup /usr/bin/mjpg_streamer -o "/usr/lib/mjpg-streamer/output_http.so -w /usr/share/mjpg-streamer/www -p 8080" -i  "/usr/lib/mjpg-streamer/input_uvc.so -b 1 -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS $FFS" 2>&1 >>${MOD_CONF}/mod_data/log/cam/mjpg_streamer.log &
+            chroot $MOD nohup /usr/bin/mjpg_streamer -o "/usr/lib/mjpg-streamer/output_http.so -w /usr/share/mjpg-streamer/www -p 8080" -i  "/usr/lib/mjpg-streamer/input_uvc.so -b 1 -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS $FFS" >>${MOD_CONF}/mod_data/log/cam/mjpg_streamer.log 2>&1 &
         fi
     fi
 }
@@ -43,9 +43,9 @@ start_ustreamer() {
     >${MOD_CONF}/mod_data/log/cam/ustreamer.log
     [ "$STREAMER" == "auto" ] && FORMAT=$(${V4l2} -d /dev/$VIDEO --list-formats| grep '\[' | tail -1| cut -d "'" -f2)
     if [ -f /ZMOD ]; then
-        nohup /bin/ustreamer -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS --format=$FORMAT -s 0.0.0.0 2>&1 >>${MOD_CONF}/mod_data/log/cam/ustreamer.log &
+        nohup /bin/ustreamer -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS --format=$FORMAT -s 0.0.0.0 >>${MOD_CONF}/mod_data/log/cam/ustreamer.log 2>&1 &
     else
-        chroot ${MOD} nohup /bin/ustreamer -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS --format=$FORMAT -s 0.0.0.0 2>&1 >>${MOD_CONF}/mod_data/log/cam/ustreamer.log &
+        chroot ${MOD} nohup /bin/ustreamer -d /dev/${VIDEO} -r ${WIDTH}x${HEIGHT} -f $FPS --format=$FORMAT -s 0.0.0.0 >>${MOD_CONF}/mod_data/log/cam/ustreamer.log 2>&1 &
     fi
 }
 
@@ -81,8 +81,8 @@ up() {
     fi
 
     if [ -c /dev/$VIDEO ]; then
-        ${V4l2} -d /dev/$VIDEO --list-formats 2>&1 >>${MOD_CONF}/mod_data/log/cam/camera.log
-        ${V4l2} -d /dev/$VIDEO --list-formats-ext 2>&1 >>${MOD_CONF}/mod_data/log/cam/camera.log
+        ${V4l2} -d /dev/$VIDEO --list-formats >>${MOD_CONF}/mod_data/log/cam/camera.log 2>&1
+        ${V4l2} -d /dev/$VIDEO --list-formats-ext >>${MOD_CONF}/mod_data/log/cam/camera.log 2>&1
         if [ "$STREAMER" == "mjpg_streamer" ]; then
             start_mjpg_streamer
         else if [ "$STREAMER" == "ustreamer" ]; then
@@ -107,8 +107,8 @@ up() {
     ${V4l2} --all 2>&1 >>${MOD_CONF}/mod_data/log/cam/camera.log
     ls -1 /dev/video? | while read a; do
         echo "$a" 2>&1 >>${MOD_CONF}/mod_data/log/cam/camera.log
-        ${V4l2} -d $a --list-formats  2>&1 >>${MOD_CONF}/mod_data/log/cam/camera.log
-        ${V4l2} -d $a --list-formats-ext  2>&1 >>${MOD_CONF}/mod_data/log/cam/camera.log
+        ${V4l2} -d $a --list-formats >>${MOD_CONF}/mod_data/log/cam/camera.log 2>&1
+        ${V4l2} -d $a --list-formats-ext >>${MOD_CONF}/mod_data/log/cam/camera.log 2>&1 
     done;
 }
 
