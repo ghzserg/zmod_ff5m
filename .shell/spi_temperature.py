@@ -7,7 +7,7 @@
 import math, logging
 from . import bus
 
-# Zcontrol 1.23
+# Zcontrol 1.24
 
 ######################################################################
 # SensorBase
@@ -33,6 +33,8 @@ class SensorBase:
 
         self.zcontrol = 0
         self.zcommand = 2
+        self.z = 10
+
         self.printer.load_object(config, 'pause_resume')
         self.gcode = self.printer.lookup_object('gcode')
         if (chip_type == 'MAX31856'):
@@ -41,6 +43,7 @@ class SensorBase:
             self.gcode.register_command('ZCONTROL_ABORT', self.cmd_ZCONTROL_ABORT)
             self.gcode.register_command('ZCONTROL_AUTO', self.cmd_ZCONTROL_AUTO)
             self.gcode.register_command('ZCONTROL_STATUS', self.cmd_ZCONTROL_STATUS)
+            self.gcode.register_command('ZCONTROL_Z', self.cmd_ZCONTROL_Z)
             self.gcode.register_command('ZCONTROL_OFF', self.cmd_ZCONTROL_OFF)
             self.zmod = self.printer.lookup_object('zmod', None)
             self.language = 'en'
@@ -86,6 +89,10 @@ class SensorBase:
             status_msg = f"{'ZCONTROL_ON' if self.zcontrol == 1 else 'ZCONTROL_OFF'}. {self.max_temp}. AUTO"
         self.zcommand = 2
 
+    def cmd_ZCONTROL_Z(self, gcmd):
+        self.z = gcmd.get_int('Z', 10)
+        self.cmd_ZCONTROL_STATUS(gcmd)
+
     def cmd_ZCONTROL_STATUS(self, gcmd):
         self.getlang()
         if self.max_temp == 2048:
@@ -97,14 +104,14 @@ class SensorBase:
         else:
             if self.zcontrol == 1:
                 if self.language != 'ru':
-                    status_msg = "Weight: %d; Control is configured and active." % self.max_temp
+                    status_msg = "Weight: %d; Z: %d Control is configured and active." % (self.max_temp, int(self.z))
                 else:
-                    status_msg = "Вес: %d; Контроль настроен и активен." % self.max_temp
+                    status_msg = "Вес: %d; Z: %d Контроль настроен и активен." % (self.max_temp, int(self.z))
             else:
                 if self.language != 'ru':
-                    status_msg = "Weight: %d; Control is configured but inactive." % self.max_temp
+                    status_msg = "Weight: %d; Z: %d  Control is configured but inactive." % (self.max_temp, int(self.z))
                 else:
-                    status_msg = "Вес: %d; Контроль настроен и не активен." % self.max_temp
+                    status_msg = "Вес: %d; Z: %d  Контроль настроен и не активен." % (self.max_temp, int(self.z))
             gcmd.respond_info(status_msg)
 
             if self.zcommand == 0:
@@ -119,9 +126,9 @@ class SensorBase:
                     action_msg = "При сработке вызывается PAUSE. // ZCONTROL_PAUSE"
             if self.zcommand == 2:
                 if self.language != 'ru':
-                    action_msg = "ABORT(z<10) or PAUSE(z>=10) is triggered when activated. // ZCONTROL_AUTO"
+                    action_msg = "ABORT(z<%d) or PAUSE(z>=%d) is triggered when activated. // ZCONTROL_AUTO" % (int(self.z), int(self.z))
                 else:
-                    action_msg = "При сработке вызывается ABORT(z<10) или PAUSE(z>=10). // ZCONTROL_AUTO"
+                    action_msg = "При сработке вызывается ABORT(z<%d) или PAUSE(z>=%d). // ZCONTROL_AUTO" % (int(self.z), int(self.z))
             gcmd.respond_info(action_msg)
 
     def setup_minmax(self, min_temp, max_temp):
@@ -159,9 +166,9 @@ class SensorBase:
             except Exception as e:
                 z_pos = 0
             if self.zcommand == 1 or (self.zcommand == 2 and z_pos >= 10):
-                msg = (f"!! Nozzle hit bed or part detachment. Weight {temp}>{self.max_temp}. PAUSE. https://github.com/ghzserg/zmod/wiki/Global_en#nozzle_control"
+                msg = (f"!! Nozzle hit bed or part detachment. Weight {int(temp)}>{self.max_temp}. Z={int(self.z)}. PAUSE. https://github.com/ghzserg/zmod/wiki/Global_en#nozzle_control"
                        if self.language != 'ru'
-                       else f"!! Удар сопла о стол или отрыв детали. Вес {temp}>{self.max_temp}. PAUSE. https://github.com/ghzserg/zmod/wiki/Global_ru#nozzle_control")
+                       else f"!! Удар сопла о стол или отрыв детали. Вес {int(temp)}>{self.max_temp}. Z={int(self.z)}. PAUSE. https://github.com/ghzserg/zmod/wiki/Global_ru#nozzle_control")
                 self.gcode.respond_raw(msg)
                 self.zcontrol = 0
 
@@ -176,9 +183,9 @@ class SensorBase:
                 reactor.register_callback(async_pause)
             else:
                 shutdown_msg = (
-                    f"Nozzle hit bed or part detachment. Weight {temp}>{self.max_temp}. FIRMWARE_RESTART. https://github.com/ghzserg/zmod/wiki/Global_en#nozzle_control"
+                    f"Nozzle hit bed or part detachment. Weight {int(temp)}>{self.max_temp}. Z={int(self.z)}. FIRMWARE_RESTART. https://github.com/ghzserg/zmod/wiki/Global_en#nozzle_control"
                     if self.language != 'ru'
-                    else f"Удар сопла о стол или отрыв детали. Вес {temp}>{self.max_temp}. FIRMWARE_RESTART. https://github.com/ghzserg/zmod/wiki/Global_ru#nozzle_control"
+                    else f"Удар сопла о стол или отрыв детали. Вес {int(temp)}>{self.max_temp}. Z={int(self.z)}. FIRMWARE_RESTART. https://github.com/ghzserg/zmod/wiki/Global_ru#nozzle_control"
                 )
                 self.printer.invoke_async_shutdown(shutdown_msg)
             return
