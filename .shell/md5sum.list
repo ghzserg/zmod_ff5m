@@ -2751,12 +2751,9 @@ ba9ad29eb1a3da2626ed8af1d10ab63f  ./opt/nim/include/nim_qchat_client_def.h
 1c2dd0ff565bc51d821466678fa9785d  ./opt/nim/include/nim_qchat_server_def.h
 d7e8c68121cb4974aa8cca9b505ccc13  ./opt/nim/include/nim_qchat_server.h
 2d4c2c20f5ddb978d0fadecdefbcc2f2  ./opt/nim/include/nim_qchat_system_notification_def.h
-5c2282263223f23e69f6a26ff895ae9c  ./opt/nim/include/nim_base_types.h
-a1ef2c2d5bde1236640c3c64d6241f47  ./opt/nim/include/nim_build_config.h
 0330432bbc3f5c68bc4daa5f7ff4688e  ./opt/nim/include/nim_chatroom_def.h
 81bf4e3be21b81aad7388a6877f3795c  ./opt/nim/include/nim_chatroom.h
 79f6b8942a7cc3e85f20c837b185e8e5  ./opt/nim/include/nim_chatroom_sdk_dll.h
-f61ab7fab8c1430fa09682614a813437  ./opt/nim/include/nim_client_def.h
 d9d28c679a8b39ed485d528af781d29b  ./opt/nim/include/nim_client.h
 efdad6fac7929d7ebc72cb6c0902d277  ./opt/nim/include/nim_client_unittest.h
 84e6e688c11602031954bf6c030b6d27  ./opt/nim/include/nim_data_sync_def.h
@@ -2777,7 +2774,6 @@ a7864595eed9fa6ea05c95feccacee11  ./opt/nim/include/nim_nos.h
 0b0501ad4304fae5e9d3b999b7b2e4b4  ./opt/nim/include/nim_nos_unittest.h
 8e08d6dc114aef786080c63bfe93ba32  ./opt/nim/include/nim_plugin_in_def.h
 597aec190f2cd2e2689e51d83c12291e  ./opt/nim/include/nim_plugin_in.h
-56949083ac1503ad0a09ec2a3a1a31b4  ./opt/nim/include/nim_res_code_def.h
 e2dcb183528b2c77497c71da06a01e5c  ./opt/nim/include/nim_sdk_dll.h
 db580ee177ba94900c9bada59584825b  ./opt/nim/include/nim_session_def.h
 811d8bf28694ec354640d1da80631c8d  ./opt/nim/include/nim_session.h
@@ -2804,8 +2800,6 @@ bed2104c9f055f1567568b9aeb585e11  ./opt/nim/include/nim_vchat_embedded.h
 bc84ad99e70f3f12e8be9de5102c8173  ./opt/nim/include/nim_vchat.h
 de1a6d495512598887563b474b556367  ./opt/nim/include/nim_vchat_mobile.h
 28505bc9731d180006c4f589f91e4bef  ./opt/nim/include/stdbool.h
-80385eab3360ad6505e046bb586fd023  ./opt/nim/lib/libnim_chatroom.so
-ee7da64faa012cc9eaf8c1ce99f57f4f  ./opt/nim/lib/libnim.so
 42bf3ad81c66bcec7811e0f2febe43f8  ./opt/openssl-1.0.2d/bin/c_rehash
 1a38b03f605fb35f3b95e38b2e3966d0  ./opt/openssl-1.0.2d/bin/openssl
 c4dd23fb4aaf685a16b003d72b865053  ./opt/openssl-1.0.2d/include/openssl/aes.h
