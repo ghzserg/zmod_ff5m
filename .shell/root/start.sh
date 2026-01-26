@@ -52,6 +52,16 @@ get_branch_from_config() {
   ' "$config_file"
 }
 
+check_link()
+{
+    a=$(readlink "$1" 2>/dev/null)
+    if [ "$a" != "$2" ]; then
+        /bin/echo -n "$1 - Incorrect link ($a!=$2): "
+        rm -f "$1" 2>/dev/null
+        ln -s "$2" "$1" 2>/dev/null && echo "Исправлено"  || echo "Ошибка исправления"
+    fi
+}
+
 prepare_chroot()
 {
     echo ZMOD >/ZMOD
@@ -72,7 +82,7 @@ prepare_chroot()
     [ -L /etc/init.d/S98camera ] && rm -f /etc/init.d/S98camera
     [ -L /etc/init.d/S99camera ] || ln -s /opt/config/mod/.shell/root/S99camera /etc/init.d/
     [ -L /etc/init.d/S60klipper ] || ln -s /opt/config/mod/.shell/root/S60klipper /etc/init.d/
-    [ ${AD5X} -eq 0 ] && [ -L /root/klipper-env/klippy ] || ln -s /opt/config/mod/.shell/root/klippy /root/klipper-env/
+    [ ${AD5X} -eq 0 ] && check_link /root/klipper-env/klippy /opt/config/base/klipper/klippy
 
     [ -L /etc/init.d/S35tslib ] && rm -f /etc/init.d/S35tslib
     [ -L /etc/init.d/S80guppyscreen ] || ln -s /opt/config/mod/.shell/root/S80guppyscreen /etc/init.d/
@@ -97,7 +107,7 @@ prepare_chroot()
         done
     cd ${CUR_DIR}
 
-    [ -L /bin/boot_eboard_mcu ] || ln -s /opt/config/mod/.shell/root/mcu/boot_eboard_mcu /bin/boot_eboard_mcu
+    #[ -L /bin/boot_eboard_mcu ] || ln -s /opt/config/mod/.shell/root/mcu/boot_eboard_mcu /bin/boot_eboard_mcu
     [ -L /bin/backlight ] || ln -s /opt/config/mod/.shell/root/backlight /bin/backlight
 
     rm -rf /root/moonraker-env/lib/python3.12/site-packages/uvloop*  || echo "uvloop уже убит"
